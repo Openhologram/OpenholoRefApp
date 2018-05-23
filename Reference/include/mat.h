@@ -5,150 +5,351 @@
 #include "ivec.h"
 #include "typedef.h"
 #include "complex.h"
+#include "define.h"
+
+#include <vector>
 
 using namespace oph;
 
 namespace oph
 {
-	template<typename T> class mat;
-	template<typename T> class matElement;
-
 	template<typename T>
-	class __declspec(dllexport) mat
+	struct _declspec(dllexport) TwoDimMatrix
 	{
-		friend matElement<T>;
 	public:
-		struct Address
-		{
-			int level;
-			void* next;
-		};
+		using typeT = typename std::enable_if<
+			std::is_same<real, T>::value || std::is_same<real_t, T>::value ||
+			std::is_same<int, T>::value ||
+			std::is_same<uchar, T>::value ||
+			std::is_same<Complex<real>, T>::value || std::is_same<Complex<real_t>, T>::value, T>::type;
 
-	private:
-		int dim;
-		int* size;
-		Address* top;
+		std::vector<T>* mat;
+		ivec2 size;
 
-	public:
-		mat(int _dim, int* _size) : dim(_dim)
-		{
-			size = new int[dim];
-			for (int i = 0; i < dim; i++) size[i] = _size[i];
-
-			top = new Address;
-			top->level = 0;
-
-			init(top);
-		}
-		mat(int _dimx, int _dimy = 1, int _dimz = 1) : dim(1)
-		{
-			_dimy > 1 ? dim++ : dim;
-			_dimz > 1 ? dim++ : dim;
-
-			size = new int[dim];
-
-			size[0] = _dimx;
-			_dimy > 1 ? size[1] = _dimy : size[1];
-			_dimz > 1 ? size[2] = _dimz : size[2];
-
-			top = new Address;
-			top->level = 0;
-
-			init(top);
-		}
-		mat(mat<T>& ref) : dim(ref.dim)
-		{
-			size = new int[dim];
-			for (int i = 0; i < dim; i++) size[i] = ref.size[i];
-
-			top = new Address;
-			top->level = 0;
-
-			init(top);
-		}
-		~mat(void)
-		{
-			release(top);
-			delete[] size;
+		TwoDimMatrix(void) : size(1, 1) {
+			init();
 		}
 
-	private:
-		void init(Address* cur)
-		{
-			if (!cur) return;
+		TwoDimMatrix(int x, int y) : size(x, y) {
+			init();
+		}
 
-			if (cur->level == dim - 1) {
-				cur->next = new T[size[cur->level]];
-				return;
-			}
-			cur->next = new Address[size[cur->level]];
+		TwoDimMatrix(ivec2 _size) : size(_size) {
+			init();
+		}
 
-			for (int i = 0; i != size[cur->level]; i++) {
-				(static_cast<Address*>(cur->next) + i)->level = cur->level + 1;
-				init(static_cast<Address*>(cur->next) + i);
+		TwoDimMatrix(TwoDimMatrix<T>& ref) : size(ref.size) {
+			init();
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] = ref[x][y];
+				}
+		}
+
+		~TwoDimMatrix() {
+			release();
+		}
+
+		void init(void) {
+			mat = new std::vector<T>[size[0]];
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					if (x == y && size[0] == size[1])
+						mat[x].push_back(1);
+					else
+						mat[x].push_back(0);
+				}
 			}
 		}
-		void release(Address* cur)
-		{
-			if (!cur) return;
 
-			for (int i = 0; cur->level < dim - 1 && i < size[cur->level]; i++)
-				release(static_cast<Address*>(cur->next) + i);
-			delete[] cur->next;
+		void release(void) {
+			if (!mat) return;
+			delete[] mat;
+			mat = nullptr;
 		}
+		
+		oph::ivec2& getSize(void) { return size; }
 
-	public:
-		inline matElement<T> operator[](const int index) { return matElement<T>(index, 1, static_cast<void*>(top), this); }
-	};
+		TwoDimMatrix<T>& resize(int x, int y) {
+			release();
 
-	template<typename T>
-	class matElement
-	{
-	private:
-		void* data;
+			size[0] = x; size[1] = y;
 
-		int level;
-		mat<T>* matrix;
+			init();
 
-	public:
-		matElement(int idx, int _level = 0, void* _data = nullptr, mat<T>* _matrix = nullptr)
-			: level(_level), data(_data), matrix(_matrix)
-		{
-			if (_level < 1 || idx >= matrix->size[_level - 1]) {
-				data = nullptr;
-				return;
+			return *this;
+		}	
+		
+		TwoDimMatrix<T>& identity(void) {
+			if (size[0] != size[0]) return this;
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					if (x == y)
+						mat[x][y] = 1;
+					else
+						mat[x][y] = 0;
+				}
 			}
-
-			if (level == matrix->dim)
-				data = static_cast<void*>((static_cast<T*>(static_cast<mat<T>::Address*>(data)->next) + idx));
-			else
-				data = static_cast<void*>(static_cast<mat<T>::Address*>(static_cast<mat<T>::Address*>(data)->next) + idx);
-		}
-
-		matElement(const matElement<T>& ref) : data(ref.data), level(ref.level), matrix(ref.matrix) {}
-		~matElement(void) {}
-
-		operator T() {
-			if (data) return *static_cast<T*>(data);
-			return T(0);
-		}
-
-		matElement& operator =(const T& p) {
-			if (data) *static_cast<T*>(data) = p;
 			return *this;
 		}
 
-		matElement operator[] (const int index) {
-			if (!data) return 0;
-			return matElement(index, level + 1, data, matrix);
+		T determinant(void) {
+			if (size[0] != size[1]) return 0;
+
+			return determinant(*this, size[0]);
+		}
+
+		T determinant(TwoDimMatrix<T>& _mat, int _size) {
+			int p = 0, q = 0;
+			T det = 0;
+
+			if (_size == 1)	return _mat[0][0];
+			else if (_size == 2) return _mat[0][0] * _mat[1][1] - _mat[0][1] * _mat[1][0];
+			else {
+				for (q = 0, det = 0; q<_size; q++) {
+					det = det + _mat[0][q] * cofactor(_mat, 0, q, _size);
+				}
+				return det;
+			}
+			return 0;
+		}
+
+		T cofactor(TwoDimMatrix<T>& _mat, int p, int q, int _size) {
+			int i = 0, j = 0;
+			int x = 0, y = 0;
+			TwoDimMatrix<T> cmat(_size - 1, _size - 1);
+			T cofactor = 0;
+
+			for (i = 0, x = 0; i<_size; i++) {
+				if (i != p) {
+					for (j = 0, y = 0; j<_size; j++) {
+						if (j != q) {
+							cmat[x][y] = _mat[i][j];
+							y++;
+						}
+					}
+					x++;
+				}
+			}
+
+			cofactor = pow(-1, p)*pow(-1, q)*determinant(cmat, _size - 1);
+			return cofactor;
+		}
+
+		void swapRow(int i, int j) {
+			if (i == j) return;
+			for (int k = 0; k < size[0]; k++) swap(mat[i][k], mat[j][k]);
+		}
+
+		TwoDimMatrix<T>& inverse(void) {
+			if (size[0] != size[1]) return *this;
+			if (determinant() == 0) return *this;
+
+			TwoDimMatrix<T> inv(size);
+			inv.identity();
+
+			for (int k = 0; k < size[0]; k++) {
+				int t = k - 1;
+
+				while (t + 1 < size[0] && !mat[++t][k]);
+				if (t == size[0] - 1 && !mat[t][k]) return *this;
+				swapRow(k, t), inv.swapRow(k, t);
+
+				T d = mat[k][k];
+				for (int j = 0; j < size[0]; j++)
+					mat[k][j] /= d, inv[k][j] /= d;
+
+
+				for (int i = 0; i < size[0]; i++)
+					if (i != k) {
+						T m = mat[i][k];
+						for (int j = 0; j < size[0]; j++) {
+							if (j >= k) mat[i][j] -= mat[k][j] * m;
+							inv[i][j] -= inv[k][j] * m;
+						}
+					}
+			}
+
+			*this = inv;
+
+			return *this;
+		}
+
+		TwoDimMatrix<T>& add(TwoDimMatrix<T>& p) {
+			if (size != p.size) return *this;
+
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] += p[x][y];
+				}
+			}
+
+			return *this;
+		}
+
+		TwoDimMatrix<T>& sub(TwoDimMatrix<T>& p) {
+			if (size != p.size) return *this;
+
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] -= p[x][y];
+				}
+			}
+
+			return *this;
+		}
+
+		TwoDimMatrix<T>& mul(TwoDimMatrix<T>& p) {
+			if (size[0] != p.size[1]) return *this;
+
+			TwoDimMatrix<T> res(p.size[1], size[0]);
+
+			for (int x = 0; x < res.size[0]; x++) {
+				for (int y = 0; y < res.size[1]; y++) {
+					res[x][y] = 0;
+					for (int num = 0; num < size[1]; num++)
+					{
+						res[x][y] += mat[x][num] * p[num][y];
+						cout << x * res.size[1] + y << ". res[x][y](" << res[x][y] << ")" << " = " << mat[x][num] << " * " << p[num][y];
+						cout << endl;
+					}
+				}
+				cout << endl;
+			}
+			cout << endl;
+
+			this->resize(res.size[0], res.size[1]);
+			*this = res;
+
+			return *this;
+		}
+
+		TwoDimMatrix<T>& div(TwoDimMatrix<T>& p) {
+			if (size != p.size) return *this;
+
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] /= p[x][y];
+				}
+			}
+
+			return *this;
+		}
+
+
+		std::vector<T>& operator[](const int index) {
+			return mat[index];
+		}
+
+		T& operator ()(int x, int y) {
+			return mat[x][y];
+		}
+
+		inline bool operator =(TwoDimMatrix<T>& p) {
+			if (size != p.size)
+				return false;
+
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] = p[x][y];
+				}
+
+			return true;
+		}
+
+		inline void operator =(T* p) {
+			for (int x = 0; x < size[_X]; x++)
+				for (int y = 0; y < size[_Y]; y++) {
+					mat[x][y] = *p;
+					p++;
+				}
+		}
+
+		TwoDimMatrix<T>& operator ()(T args...) {
+			va_list ap;
+
+			__va_start(&ap, args);
+
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					if (x == 0 && y == 0) {
+						mat[x][y] = args;
+						continue;
+					}
+					T n = __crt_va_arg(ap, T);
+					mat[x][y] = n;
+				}
+			__crt_va_end(ap);
+
+			return *this;
+		}
+
+		const TwoDimMatrix<T>& operator +(const TwoDimMatrix<T>& p) {
+			return *add(p);
+		}
+
+		const TwoDimMatrix<T>& operator -(const TwoDimMatrix<T>& p) {
+			return *sub(p);
+		}
+
+		const TwoDimMatrix<T>& operator *(const TwoDimMatrix<T>& p) {
+			return *mul(p);
+		}
+
+		const TwoDimMatrix<T>& operator /(const TwoDimMatrix<T>& p) {
+			return *div(p);
+		}
+
+		const TwoDimMatrix<T>& operator +(const T& p) {
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] += p;
+				}
+			return *this;
+		}
+
+		const TwoDimMatrix<T>& operator -(const T& p) {
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] -= p;
+				}
+			return *this;
+		}
+
+		const TwoDimMatrix<T>& operator *(const T& p) {
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] *= p;
+				}
+			return *this;
+		}
+
+		const TwoDimMatrix<T>& operator /(const T& p) {
+			for (int x = 0; x < size[0]; x++)
+				for (int y = 0; y < size[1]; y++) {
+					mat[x][y] /= p;
+				}
+			return *this;
+		}
+
+		//print test
+		void Print(const char* _context) {
+			for (int x = 0; x < size[0]; x++) {
+				for (int y = 0; y < size[1]; y++) {
+					printf(_context, mat[x][y]);
+				}
+				cout << endl;
+			}
+			cout << endl;
 		}
 	};
 
-	typedef mat<real> MAT;
-	typedef mat<real_t> MAT_T;
-	typedef mat<int> MAT_INT;
-	typedef mat<oph::Complex<real>> MAT_CPLX;
-	typedef mat<oph::Complex<real_t>> MAT_CPLX_T;
+	typedef oph::TwoDimMatrix<int> OphIntField;
+	typedef oph::TwoDimMatrix<uchar> OphByteField;
+	typedef oph::TwoDimMatrix<real> OphRealField;
+	typedef oph::TwoDimMatrix<real_t> OphRealTField;
+	typedef oph::TwoDimMatrix<Complex<real>> OphComplexField;
+	typedef oph::TwoDimMatrix<Complex<real_t>> OphComplexTField;
 }
 
 #endif // !__mat_h

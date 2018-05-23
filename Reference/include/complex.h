@@ -53,18 +53,23 @@ namespace oph {
 		}
 
 		T angle(void)
-		{
+		{matrix identity
 			if (std::is_same<double, T>::value)
 				return atan2(im, re);
 			else if (std::is_same<float, T>::value)
 				return atan2f(im, re);
 		}
 
-		T exp() {
-			if (std::is_same<double, T>::value)
-				return std::exp(re + im);
-			else if (std::is_same<float, T>::value)
-				return std::expf(re + im);
+		Complex<T>& exp() {
+			if (std::is_same<double, T>::value){
+				re = std::exp(re) * cos(im);
+				im = std::exp(re) * sin(im);
+			}
+			else {
+				re = std::expf(re) * cos(im);
+				im = std::expf(re) * sin(im);
+			}
+			return *this;
 		}
 
 		Complex<T> conj() const { return Complex<T>(re, -im); }
@@ -122,19 +127,26 @@ namespace oph {
 			return *this;
 		}
 
+		const Complex<T>& operator/= (const cplx k) {
+			re /= k;
+			im /= k;
+
+			return *this;
+		}
+
+		const Complex<T>& operator /= (const Complex<T>& p) {
+			re /= p.re;
+			im /= p.im;
+
+			return *this;
+		}
+
 		bool operator < (const Complex<T>& p){
 			return (re < p.re);
 		}
 
 		bool operator > (const Complex<T>& p) {
 			return (re > p.re);
-		}
-
-		const Complex<T>& operator/= (const cplx k){
-			re /= k;
-			im /= k;
-
-			return *this;
 		}
 
 		operator unsigned char() {

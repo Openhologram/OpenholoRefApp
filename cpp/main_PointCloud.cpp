@@ -1,7 +1,3 @@
-/* OpenHolo Beta v1.0 - Generation Module - PointCloud
-Example for Point Cloud based Fringe Pattern Generation
-*/
-
 #include <iostream>
 using namespace std;
 
@@ -34,10 +30,12 @@ int main(int argc, char **argv)
 	}
 
 	double time = Hologram->generateHologram();
+	Hologram->normalize();
 	cout << "Implement Time : " << time << " sec" << endl;
 
 	Hologram->save(OUTPUT_BMP);
-	Hologram->release();
+
+	delete Hologram;
 
 	return 0;
 }

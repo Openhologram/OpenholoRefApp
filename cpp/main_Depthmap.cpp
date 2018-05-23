@@ -1,11 +1,9 @@
-/* OpenHolo Beta v1.0 - Generation Module - DepthMap
-Example for Depth Map based Fringe Pattern Generation
-*/
-
 #include <iostream>
 using namespace std;
 
 #include "ophDepthMap.h"
+
+#define OUTPUT_BMP "result/2250ppi_3840_UD_flat0"
 
 int main(int argc, char **argv)
 {
@@ -21,8 +19,15 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	Hologram->initialize();
-	Hologram->generateHologram();
+	double time = Hologram->generateHologram();
+	Hologram->encodeHologram();
+	Hologram->normalize();
+
+	cout << "Implement Time : " << time << " sec" << endl;
+
+	Hologram->save(OUTPUT_BMP, 24);
+
+	delete Hologram;
 
 	return 0;
 }
