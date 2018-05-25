@@ -30,13 +30,13 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	Openholo(void);
+	explicit Openholo(void);
 
 protected:
 	/**
 	* @brief Destructor
 	*/
-	virtual ~Openholo(void);
+	virtual ~Openholo(void) = 0;
 
 private:
 	void initialize(void);

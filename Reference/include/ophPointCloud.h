@@ -2,7 +2,6 @@
 * @mainpage Openholo Generation Point Cloud : GPGPU Accelation using CUDA
 * @brief
 */
-
 #ifndef __ophPointCloud_h
 #define __ophPointCloud_h
 
@@ -43,7 +42,6 @@
 
 using namespace oph;
 
-template<typename T> class TwoDimMatrix;
 class GEN_DLL ophPointCloud : public ophGen
 {
 public:
@@ -51,11 +49,12 @@ public:
 	* @brief Constructor
 	* @details Initialize variables.
 	*/
-	ophPointCloud(void);
+	explicit ophPointCloud(void);
 	/**
 	* @overload
 	*/
-	ophPointCloud(const std::string pc_file, const std::string cfg_file);
+	explicit ophPointCloud(const std::string pc_file, const std::string cfg_file);
+protected:
 	/**
 	* @brief Destructor
 	*/
