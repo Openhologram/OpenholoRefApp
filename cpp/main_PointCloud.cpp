@@ -30,12 +30,13 @@ int main(int argc, char **argv)
 	}
 
 	double time = Hologram->generateHologram();
+	//Encoding process required : Hologram->encodeHologram();
 	Hologram->normalize();
 	cout << "Implement Time : " << time << " sec" << endl;
 
 	Hologram->save(OUTPUT_BMP);
 
-	delete Hologram;
+	Hologram->release();
 
 	return 0;
 }
