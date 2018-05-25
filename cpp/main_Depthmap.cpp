@@ -3,8 +3,6 @@ using namespace std;
 
 #include "ophDepthMap.h"
 
-#define OUTPUT_BMP "result/2250ppi_3840_UD_flat0"
-
 int main(int argc, char **argv)
 {
 	cout << "OpenHolo Library : Generation Hologram - Depth Map Example" << endl;
@@ -25,9 +23,9 @@ int main(int argc, char **argv)
 
 	cout << "Implement Time : " << time << " sec" << endl;
 
-	Hologram->save(OUTPUT_BMP, 24);
-
-	delete Hologram;
+	Hologram->save();
+	
+	Hologram->release();
 
 	return 0;
 }
