@@ -20,7 +20,7 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	explicit ophRec(void);
+	ophRec(void);
 
 protected:
 	/**
