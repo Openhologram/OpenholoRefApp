@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	Hologram->readConfig(INPUT_CONFIG);
 
 	Hologram->generateHologram();
-	Hologram->encode();
+	//Hologram->encode();
 	//Encoding process required : Hologram->encodeHologram();
 	Hologram->normalize();
 
