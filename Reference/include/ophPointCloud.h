@@ -2,6 +2,7 @@
 * @mainpage Openholo Generation Point Cloud : GPGPU Accelation using CUDA
 * @brief
 */
+
 #ifndef __ophPointCloud_h
 #define __ophPointCloud_h
 
@@ -49,12 +50,11 @@ public:
 	* @brief Constructor
 	* @details Initialize variables.
 	*/
-	explicit ophPointCloud(void);
+	ophPointCloud(void);
 	/**
 	* @overload
 	*/
-	explicit ophPointCloud(const std::string pc_file, const std::string cfg_file);
-protected:
+	ophPointCloud(const std::string pc_file, const std::string cfg_file);
 	/**
 	* @brief Destructor
 	*/
