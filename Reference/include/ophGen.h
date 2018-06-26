@@ -46,10 +46,9 @@ struct GEN_DLL OphDepthMapConfig {
 	std::vector<int>	render_depth;				///< Used when only few specific depth levels are rendered, usually for test purpose
 
 	OphDepthMapConfig():field_lens(0), near_depthmap(0), far_depthmap(0), num_of_depth(0) {}
-	//test commit
 };
 
-struct GEN_DLL OphDepthMapParams
+struct OphDepthMapParams
 {
 	std::string				SOURCE_FOLDER;						///< input source folder - config file.
 	std::string				IMAGE_PREFIX;						///< the prefix of the input image file - config file.
@@ -71,7 +70,7 @@ struct GEN_DLL OphDepthMapParams
 	bool					RANDOM_PHASE;						///< If true, random phase is imposed on each depth layer.
 };
 
-struct GEN_DLL OphDepthMapSimul
+struct OphDepthMapSimul
 {
 	// for Simulation (reconstruction)
 	//===================================================
@@ -98,7 +97,7 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	explicit ophGen(void);
+	ophGen(void);
 
 protected:
 	/**
@@ -127,9 +126,9 @@ public:
 	virtual bool readConfig(const std::string fname, OphPointCloudConfig& config);
 	virtual bool readConfig(const std::string fname, OphDepthMapConfig& config, OphDepthMapParams& params, OphDepthMapSimul& simuls);
 
-	virtual void normalize(const int frame = 0);
+	virtual void normalize(void);
 
-	virtual int save(const char* fname = nullptr, uint8_t bitsperpixel = 8);
+	virtual int save(const char* fname, uint8_t bitsperpixel = 8);
 	virtual int load(const char* fname, void* dst);
 
 protected:
