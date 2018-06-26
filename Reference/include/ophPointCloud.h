@@ -2,7 +2,6 @@
 * @mainpage Openholo Generation Point Cloud : GPGPU Accelation using CUDA
 * @brief
 */
-
 #ifndef __ophPointCloud_h
 #define __ophPointCloud_h
 
@@ -50,11 +49,12 @@ public:
 	* @brief Constructor
 	* @details Initialize variables.
 	*/
-	ophPointCloud(void);
+	explicit ophPointCloud(void);
 	/**
 	* @overload
 	*/
-	ophPointCloud(const std::string pc_file, const std::string cfg_file);
+	explicit ophPointCloud(const char*, const char* cfg_file);
+protected:
 	/**
 	* @brief Destructor
 	*/
@@ -90,8 +90,48 @@ public:
 	}
 	/** \ingroup getter/setter */
 	inline void getTiltAngle(vec2& tiltangle) { tiltangle = pc_config_.tilt_angle; }
+	/** \ingroup getter/setter */
+	inline vec3* getLocationPC(void) { return pc_data_.location; }
+	/** \ingroup getter/setter */
+	inline vec3* getColorPC(void) { return pc_data_.color; }
+	/** \ingroup getter/setter */
+	inline real* getAmplitudePC(void) { return pc_data_.amplitude; }
+	/** \ingroup getter/setter */
+	inline real* getPhasePC(void) { return pc_data_.phase; }
+	/** \ingroup getter/setter */
+	inline void setPointCloudModel(vec3* location, vec3 *color, real *amplitude, real *phase) {
+		pc_data_.location = location;
+		pc_data_.color = color;
+		pc_data_.amplitude = amplitude;
+		pc_data_.phase = phase;
+	}
+	/** \ingroup getter/setter */
+	inline void getPointCloudModel(vec3 *location, vec3 *color, real *amplitude, real *phase) {
+		getModelLocation(location);
+		getModelColor(color);
+		getModelAmplitude(amplitude);
+		getModelPhase(phase);
+	}
+
+	/**
+	\ingroup getter/setter
+	* @{
+	* @brief Directly Set Basic Data
+	*/
+	/**
+	* @param Location 3D Point Cloud Geometry Data
+	* @param Color 3D Point Cloud Color Data
+	* @param Amplitude 3D Point Cloud Model Amplitude Data of Point-Based Light Wave
+	* @param Phase 3D Point Cloud Model Phase Data of Point-Based Light Wave
+	*/
+	inline void getModelLocation(vec3 *location) { location = pc_data_.location; }
+	inline void getModelColor(vec3 *color) { color = pc_data_.color; }
+	inline void getModelAmplitude(real *amplitude) { amplitude = pc_data_.amplitude; }
+	inline void getModelPhase(real *phase) { phase = pc_data_.phase; }
+	inline int getNumberOfPoints() { return n_points; }
 
 public:
+	void initialize(void);
 	/**
 	* @brief Set the value of a variable isCPU_(true or false)
 	* @details <pre>
@@ -115,7 +155,7 @@ public:
 	* @param InputModelFile PointCloud(*.dat) input file path
 	* @return number of Pointcloud (if it failed loading, it returned -1)
 	*/
-	virtual int loadPointCloud(const std::string pc_file);
+	virtual int loadPointCloud(const char* pc_file, uint flag = PC_XYZ | PC_PHASE | PC_AMPLITUDE);
 
 	/**
 	\defgroup Import_Configfile
@@ -126,31 +166,15 @@ public:
 	/**
 	* @param InputConfigFile Specification Config(*.config) file path
 	*/
-	virtual bool readConfig(const std::string cfg_file);
-
-	/**
-	\ingroup getter/setter
-	* @{
-	* @brief Directly Set Basic Data
-	*/
-	/**
-	* @param VertexArray 3D Point Cloud Model Geometry Data (x0, y0, z0, x1, y1, z1 ...)
-	* @param AmplitudeArray 3D Point Cloud Model Amplitude Data of Point-Based Light Wave
-	* @param PhaseArray  3D Point Cloud Model Phase Data of Point-Based Light Wave
-	*/
-	void setPointCloudModel(const std::vector<real> &vertex_array, const std::vector<real> &amplitude_array, const std::vector<real> &phase_array);
-	void getPointCloudModel(std::vector<real> &vertex_array, std::vector<real> &amplitude_array, std::vector<real> &phase_array);
-
-	void getModelVertexArray(std::vector<real> &vertex_array);
-	void getModelAmplitudeArray(std::vector<real> &amplitude_array);
-	void getModelPhaseArray(std::vector<real> &phase_array);
-	int getNumberOfPoints();
+	virtual bool readConfig(const char* cfg_file);
 
 	/**
 	* @brief Generate a hologram, main funtion.
 	* @return implement time (sec)
 	*/
 	double generateHologram();
+	double diffract(void);
+	void encode(void);
 
 private:
 	/**
@@ -164,7 +188,7 @@ private:
 	* @param dst Output Fringe Pattern
 	* @return implement time (sec)
 	*/
-	double genCghPointCloud(real* dst);
+	void genCghPointCloud(real* dst);
 
 	/**
 	* @overload
@@ -186,7 +210,7 @@ private:
 	* @param dst Output Fringe Pattern
 	* @return implement time (sec)
 	*/
-	double genCghPointCloud_cuda(real* dst);
+	void genCghPointCloud_cuda(real* dst);
 
 	/** @}	*/
 
@@ -202,11 +226,8 @@ private:
 	bool IsCPU_;
 	int n_points;
 
-	std::vector<real> vertex_array_;
-	std::vector<real> amplitude_array_;
-	std::vector<real> phase_array_;
-
 	OphPointCloudConfig pc_config_;
+	OphPointCloudData	pc_data_;
 };
 
 extern "C"

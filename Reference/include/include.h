@@ -18,9 +18,13 @@
 
 #include "struct.h"
 #include "define.h"
+#include "enumerator.h"
 #include "function.h"
 #include "typedef.h"
 
 using namespace std;
+
+#pragma warning(disable : 4251)
+#pragma warning(disable : 4819)
 
 #endif // !__include_h

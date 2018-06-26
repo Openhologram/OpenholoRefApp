@@ -43,7 +43,7 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	ophSig(void);
+	explicit ophSig(void);
 
 protected:
 	/**

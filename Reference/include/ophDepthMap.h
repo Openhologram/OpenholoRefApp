@@ -85,6 +85,8 @@ Before building an execution file, you need to install MS Visual Studio 2015 C++
 
 #include <cufft.h>
 
+#include "include.h"
+
 
 using namespace oph;
 
@@ -106,9 +108,12 @@ using namespace oph;
 class GEN_DLL ophDepthMap : public ophGen {
 
 public:
-	ophDepthMap();
+	explicit ophDepthMap();
+
+protected:
 	virtual ~ophDepthMap();
-	
+
+public:
 	void setMode(bool isCPU);
 
 	/** \ingroup init_module */
@@ -119,6 +124,9 @@ public:
 
 	/** \ingroup encode_module */
 	void encodeHologram(void);
+
+	/** \ingroup write_module */
+	virtual int save(const char* fname = nullptr, uint8_t bitsperpixel = 24);
 
 	/** \ingroup recon_module */
 	void reconstructImage(void);
@@ -146,17 +154,17 @@ public:
 
 private:
 	/** \ingroup init_module */
-	void initialize();
+	void initialize(void);
 
 	/** \ingroup init_module
 	* @{ */
-	void init_CPU();
-	void init_GPU();
+	void init_CPU(void);
+	void init_GPU(void);
 	/** @} */
 
 	/** \ingroup load_module
 	* @{ */
-	int readImageDepth(int ftr);
+	int readImageDepth(void);
 	bool prepare_inputdata_CPU(uchar* img, uchar* dimg);
 	bool prepare_inputdata_GPU(uchar* img, uchar* dimg);
 	/** @} */
@@ -175,98 +183,25 @@ private:
 
 	/** \ingroup gen_module 
 	* @{ */
-	void calc_Holo_by_Depth(int frame);
-	void calc_Holo_CPU(int frame);
-	void calc_Holo_GPU(int frame);
+	void calc_Holo_by_Depth(void);
+	void calc_Holo_CPU(void);
+	void calc_Holo_GPU(void);
 	void propagation_AngularSpectrum_CPU(oph::Complex<real>* input_u, real propagation_dist);
 	void propagation_AngularSpectrum_GPU(cufftDoubleComplex* input_u, real propagation_dist);
-	/** @} */
 
-	/** \ingroup encode_module
-	* @{ */
-	/**
-	* @brief Encode the CGH according to a signal location parameter.
-	* @param sig_location : ivec2 type,
-	*  sig_location[0]: upper or lower half, sig_location[1]:left or right half.
-	* @see encoding_CPU, encoding_GPU
-	*/
-	void encodingSymmetrization(ivec2 sig_location)
-	{
-		int pnx = context_.pixel_number[0];
-		int pny = context_.pixel_number[1];
-
-		int cropx1, cropx2, cropx, cropy1, cropy2, cropy;
-		if (sig_location[1] == 0) //Left or right half
-		{
-			cropy1 = 1;
-			cropy2 = pny;
-
-		}
-		else {
-
-			cropy = floor(pny / 2);
-			cropy1 = cropy - floor(cropy / 2);
-			cropy2 = cropy1 + cropy - 1;
-		}
-
-		if (sig_location[0] == 0) // Upper or lower half
-		{
-			cropx1 = 1;
-			cropx2 = pnx;
-
-		}
-		else {
-
-			cropx = floor(pnx / 2);
-			cropx1 = cropx - floor(cropx / 2);
-			cropx2 = cropx1 + cropx - 1;
-		}
-
-		cropx1 -= 1;
-		cropx2 -= 1;
-		cropy1 -= 1;
-		cropy2 -= 1;
-
-		if (isCPU_)
-			encoding_CPU(cropx1, cropx2, cropy1, cropy2, sig_location);
-		else
-			encoding_GPU(cropx1, cropx2, cropy1, cropy2, sig_location);
-
-
-	}
-	void encoding_CPU(int cropx1, int cropx2, int cropy1, int cropy2, oph::ivec2 sig_location);
-	void encoding_GPU(int cropx1, int cropx2, int cropy1, int cropy2, oph::ivec2 sig_location);
-	/** @} */
-
-	/** \ingroup write_module
-	* @{ */
-	virtual int save(const char* fname, uint8_t bitsperpixel = 8);
-	/** @} */
-
-	void get_rand_phase_value(oph::Complex<real>& rand_phase_val);
-	void get_shift_phase_value(oph::Complex<real>& shift_phase_val, int idx, oph::ivec2 sig_location);
-
-	void fftwShift(oph::Complex<real>* src, oph::Complex<real>* dst, fftw_complex* in, fftw_complex* out, int nx, int ny, int type, bool bNomalized = false);
-	void fftShift(int nx, int ny, oph::Complex<real>* input, oph::Complex<real>* output);
-
-	//void writeIntensity_gray8_bmp(const char* fileName, int nx, int ny, real* intensity);
-	//void writeIntensity_gray8_bmp(const char* fileName, int nx, int ny, Complex* complexvalue);
-	//void writeIntensity_gray8_real_bmp(const char* fileName, int nx, int ny, Complex* complexvalue);
-	//void writeImage_fromGPU(QString imgname, int pnx, int pny, cufftrealComplex* gpu_data);
 
 	/** \ingroup recon_module
 	* @{ */
-	void reconstruction(fftw_complex* in, fftw_complex* out);
-	void testPropagation2EyePupil(fftw_complex* in, fftw_complex* out);
-	void writeSimulationImage(int num, real val);
+	//void reconstruction(fftw_complex* in, fftw_complex* out);
+	//void testPropagation2EyePupil(fftw_complex* in, fftw_complex* out);
+	//void writeSimulationImage(int num, real val);
 	void circshift(oph::Complex<real>* in, oph::Complex<real>* out, int shift_x, int shift_y, int nx, int ny);
 	/** @} */
 
 	/**
 
 	*/
-	void release_gpu(void);
-
+	void free_gpu(void);
 	virtual void ophFree(void);
 
 private:
@@ -283,7 +218,6 @@ private:
 	int*					alpha_map_;							///< CPU variable - calculated alpha map data, values are 0 or 1.
 
 	real*					dmap_;								///< CPU variable - physical distances of depth map.
-	int						cur_frame_;
 	
 	real					dstep_;								///< the physical increment of each depth map layer.
 	std::vector<real>		dlevel_;							///< the physical value of all depth map layer.
@@ -291,7 +225,7 @@ private:
 	
 	OphDepthMapConfig		dm_config_;							///< structure variable for depthmap hologram configuration.
 	OphDepthMapParams		dm_params_;							///< structure variable for depthmap hologram parameters.
-	OphDepthMapSimul		dm_simuls_;							///< structure variable for depthmap simulation parameters.
+	//OphDepthMapSimul		dm_simuls_;							///< structure variable for depthmap simulation parameters.
 };
 
 #endif // !__ophDepthMap_h

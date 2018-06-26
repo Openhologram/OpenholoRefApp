@@ -10,19 +10,9 @@
 #include "include.h"
 #include "vec.h"
 #include "ivec.h"
-#include "real.h"
+#include "fftw3.h"
 
 using namespace oph;
-
-struct OPH_DLL OphContext {	
-	oph::ivec2		pixel_number;				///< SLM_PIXEL_NUMBER_X & SLM_PIXEL_NUMBER_Y
-	oph::vec2		pixel_pitch;				///< SLM_PIXEL_PITCH_X & SLM_PIXEL_PITCH_Y
-
-	real			k;							///< 2 * PI / lambda(wavelength)
-	oph::vec2		ss;							///< pn * pp
-
-	real			lambda;						///< wave length
-};
 
 class OPH_DLL Openholo : public Base{
 
@@ -30,47 +20,34 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	Openholo(void);
+	explicit Openholo(void);
 
 protected:
 	/**
 	* @brief Destructor
 	*/
-	virtual ~Openholo(void);
-
-private:
-	void initialize(void);
-
-public:
-	inline void setPixelNumber(int nx, int ny) { context_.pixel_number.v[0] = nx; context_.pixel_number.v[1] = ny; }
-	inline void setPixelPitch(real px, real py) { context_.pixel_pitch.v[0] = px; context_.pixel_pitch.v[1] = py; }
-	inline void setWaveLength(real w) { context_.lambda = w; }
-
-	OphContext& getContext(void) { return context_; }
-	void*		getBuffer(void) { return p_hologram; }
+	virtual ~Openholo(void) = 0;
 
 public:
 	/**
 	* @breif save data is Openholo::p_hologram if src is nullptr.
 	*/
-	int save(const char* fname, uint8_t bitsperpixel = 8, void* src = nullptr, int pic_width = 0, int pic_height = 0);
+	//int save(const char* fname, uint8_t bitsperpixel = 8, void* src = nullptr, int pic_width = 0, int pic_height = 0);
 
 	/**
 	* @breif load data from .oph or .bmp
 	* @breif loaded data is stored in the Openholo::p_hologram if dst is nullptr.
 	*/
-	int load(const char* fname, void* dst = nullptr);
+	//int load(const char* fname, void* dst = nullptr);
 
 protected:
 	int checkExtension(const char* fname, const char* ext);
 
 protected:
-	int saveAsOhf(const char* fname, uint8_t bitsperpixel, void* src, int pic_width, int pic_height);
 	int saveAsImg(const char* fname, uint8_t bitsperpixel, void* src, int pic_width, int pic_height);
 
 	/**
 	*/
-	int loadAsOhf(const char* fname, void* dst);
 	int loadAsImg(const char* fname, void* dst);
 
 	/**
@@ -102,9 +79,38 @@ protected:
 	*/
 	void convertToFormatGray8(unsigned char* src, unsigned char* dst, int w, int h, int bytesperpixel);
 
-protected:
-	OphContext	context_;
-	void*		p_hologram;
+
+	/**
+
+	*/
+	void fft1(int n, const oph::Complex<real>* in, oph::Complex<real>* out, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
+	void fft2(oph::ivec2 n, const oph::Complex<real>* in, oph::Complex<real>* out, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
+	void fft3(oph::ivec3 n, const oph::Complex<real>* in, oph::Complex<real>* out, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
+
+	/**
+	* @brief Convert data from the spatial domain to the frequency domain using 2D FFT on CPU.
+	* @details It is equivalent to Matlab code, dst = ifftshift(fft2(fftshift(src))).
+	* @param src : input data variable
+	* @param dst : output data variable
+	* @param in : input data pointer connected with FFTW plan
+	* @param out : ouput data pointer connected with FFTW plan
+	* @param nx : the number of column of the input data
+	* @param ny : the number of row of the input data
+	* @param type : If type == 1, forward FFT, if type == -1, backward FFT.
+	* @param bNomarlized : If bNomarlized == true, normalize the result after FFT.
+	* @see propagation_AngularSpectrum_CPU, encoding_CPU
+	*/
+	void fftwShift(oph::Complex<real>* src, oph::Complex<real>* dst, int nx, int ny, int type, bool bNormalized = false);
+
+	/**
+	* @brief Swap the top-left quadrant of data with the bottom-right , and the top-right quadrant with the bottom-left.
+	* @param nx : the number of column of the input data
+	* @param ny : the number of row of the input data
+	* @param input : input data variable
+	* @param output : output data variable
+	* @see fftwShift
+	*/
+	void fftShift(int nx, int ny, oph::Complex<real>* input, oph::Complex<real>* output);
 
 protected:
 	/**

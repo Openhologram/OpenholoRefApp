@@ -1,7 +1,6 @@
 #ifndef __mat_h
 #define __mat_h
 
-#include "real.h"
 #include "ivec.h"
 #include "typedef.h"
 #include "complex.h"
@@ -207,16 +206,11 @@ namespace oph
 			for (int x = 0; x < res.size[0]; x++) {
 				for (int y = 0; y < res.size[1]; y++) {
 					res[x][y] = 0;
-					for (int num = 0; num < size[1]; num++)
-					{
+					for (int num = 0; num < size[1]; num++)	{
 						res[x][y] += mat[x][num] * p[num][y];
-						cout << x * res.size[1] + y << ". res[x][y](" << res[x][y] << ")" << " = " << mat[x][num] << " * " << p[num][y];
-						cout << endl;
 					}
 				}
-				cout << endl;
 			}
-			cout << endl;
 
 			this->resize(res.size[0], res.size[1]);
 			*this = res;
@@ -350,6 +344,9 @@ namespace oph
 	typedef oph::TwoDimMatrix<real_t> OphRealTField;
 	typedef oph::TwoDimMatrix<Complex<real>> OphComplexField;
 	typedef oph::TwoDimMatrix<Complex<real_t>> OphComplexTField;
+
+	typedef OphComplexField Mat;
+	typedef OphComplexField MatF;
 }
 
 #endif // !__mat_h
