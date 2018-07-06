@@ -1,0 +1,30 @@
+<TestSpecDepthMap>
+  <SourceFolder>source</SourceFolder>
+  <ImagePrefix>RGB_D</ImagePrefix>
+  <DepthPrefix>D_D</DepthPrefix>
+  <ResultFolder>result</ResultFolder>
+  <ResultPrefix>2250ppi_3840_UD_flat</ResultPrefix>
+  <FlagStaticImage>1</FlagStaticImage>
+  <StartFrameNumber>1</StartFrameNumber>
+  <NumberFrame>60</NumberFrame>
+  <NumberOfDigitOfFrameNumbering>0</NumberOfDigitOfFrameNumbering>
+
+  <TransformMethod>0</TransformMethod>
+  <PropagationMethod>0</PropagationMethod>
+  <EncodingMethod>0</EncodingMethod>
+
+  <FieldLens>1000e-3</FieldLens>
+  <WaveLength>522e-9</WaveLength>
+  <SLMpixelNumX>11520</SLMpixelNumX>
+  <SLMpixelNumY>2160</SLMpixelNumY>
+  <SLMpixelPitchX>3.7629e-6</SLMpixelPitchX>
+  <SLMpixelPitchY>1.1289e-5</SLMpixelPitchY>
+
+  <NearOfDepth>200e-3</NearOfDepth>
+  <FarOfDepth>700e-3</FarOfDepth>
+  <FlagChangeDepthQuantization>1</FlagChangeDepthQuantization>
+  <DefaultDepthQuantization>256</DefaultDepthQuantization>
+  <NumberOfDepthQuantization>256</NumberOfDepthQuantization>
+  <RenderDepth>1:256</RenderDepth>
+  <RandomPahse>0</RandomPahse>
+</TestSpecDepthMap>
