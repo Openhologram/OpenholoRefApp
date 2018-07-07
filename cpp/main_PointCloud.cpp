@@ -5,9 +5,8 @@ using namespace std;
 
 // Define I/O Data File Path
 #define INPUT_3D_MODEL	"TestPointCloud.dat" // 3D Point Cloud Data Base
-#define INPUT_CONFIG	"TestSpec.config" // Parameters Config Specification
+#define INPUT_CONFIG	"TestSpecPointCloud.xml" // Parameters Config Specification
 #define OUTPUT_BMP		"result/Result_FringePattern" // Fringe Pattern Image Output Bitmap File Name
-
 
 int main(int argc, char **argv)
 {
