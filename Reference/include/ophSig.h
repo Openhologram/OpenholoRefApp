@@ -69,7 +69,6 @@ protected:
 	void abs(cv::Mat &in, cv::Mat &out);
 	void div(cv::Mat &A, cv::Mat &B, cv::Mat &out);
 	void linInterp(cv::Mat &X, cv::Mat &in, cv::Mat &Xq, cv::Mat &out);
-	void nmz(cv::Mat &input, cv::Mat &output);
 
 public:
 	/**
@@ -81,9 +80,7 @@ public:
 	
 	virtual bool loadParam(std::string cfg);
 
-	virtual bool propagationHolo(float depth);
-
-	virtual bool propagationHolo(float depth, float lambda);
+	virtual cv::Mat propagationHolo(float depth);
 
 	virtual cv::Mat propagationHolo(cv::Mat complexH, float depth);
 	
