@@ -5,8 +5,8 @@
   <OffsetInDepth>0.06</OffsetInDepth>
   <SLMpixelPitchX>0.000000462</SLMpixelPitchX>
   <SLMpixelPitchY>0.000000462</SLMpixelPitchY>
-  <SLMpixelNumX>4096</SLMpixelNumX>
-  <SLMpixelNumY>2160</SLMpixelNumY>
+  <SLMpixelNumX>1920</SLMpixelNumX>
+  <SLMpixelNumY>1080</SLMpixelNumY>
   <BandpassFilterShape>circle</BandpassFilterShape>
   <BandpassFilterWidthX>5</BandpassFilterWidthX>
   <BandpassFilterWidthY>3</BandpassFilterWidthY>

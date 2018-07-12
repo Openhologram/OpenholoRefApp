@@ -10,7 +10,7 @@ int main(void)
 
 	Hologram->loadComplex("teapot_real_1920,1080.txt", "teapot_imag_1920,1080.txt", 1920, 1080);
 
-	Hologram->encoding(Hologram->ENCODE_TWOPHASE);
+	Hologram->encoding(ophGen::ENCODE_TWOPHASE);
 	//Hologram->encoding(Hologram->ENCODE_SSB, Hologram->SSB_LEFT);
 
 	Hologram->normalizeEncoded();

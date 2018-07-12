@@ -15,8 +15,8 @@
 
   <FieldLens>1000e-3</FieldLens>
   <WaveLength>522e-9</WaveLength>
-  <SLMpixelNumX>11520</SLMpixelNumX>
-  <SLMpixelNumY>2160</SLMpixelNumY>
+  <SLMpixelNumX>5760</SLMpixelNumX>
+  <SLMpixelNumY>1080</SLMpixelNumY>
   <SLMpixelPitchX>3.7629e-6</SLMpixelPitchX>
   <SLMpixelPitchY>1.1289e-5</SLMpixelPitchY>
 
