@@ -19,9 +19,16 @@ int main(int argc, char **argv)
 	Hologram->readConfig(INPUT_CONFIG);
 
 	Hologram->generateHologram();
-	//Hologram->encode();
+
+	auto holo = Hologram->getHoloBuffer();
+
+	Hologram->encoding(ophGen::ENCODE_SSB);
+
+	auto enc = Hologram->getEncodedBuffer();
 	//Encoding process required : Hologram->encodeHologram();
 	Hologram->normalize();
+
+	auto norm = Hologram->getNormalizedBuffer();
 
 	Hologram->save(OUTPUT_BMP);
 
