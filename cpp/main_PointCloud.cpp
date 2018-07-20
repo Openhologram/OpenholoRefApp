@@ -18,16 +18,13 @@ int main(int argc, char **argv)
 	Hologram->loadPointCloud(INPUT_3D_MODEL);
 	Hologram->readConfig(INPUT_CONFIG);
 
-	Hologram->generateHologram();
-
+	Hologram->generateHologram(PC_DIFF_RS_NOT_ENCODED);
 	auto holo = Hologram->getHoloBuffer();
 
-	Hologram->encoding(ophGen::ENCODE_SSB);
-
+	Hologram->encode();
 	auto enc = Hologram->getEncodedBuffer();
-	//Encoding process required : Hologram->encodeHologram();
-	Hologram->normalize();
 
+	Hologram->normalize();
 	auto norm = Hologram->getNormalizedBuffer();
 
 	Hologram->save(OUTPUT_BMP);
