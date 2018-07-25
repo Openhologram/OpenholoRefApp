@@ -18,6 +18,4 @@ int main(int argc, char **argv)
 
 	Hologram->save();
 	Hologram->release();
-
-	return 0;
 }

@@ -2,36 +2,33 @@
 #include <iostream>
 using namespace std;
 
-#include "ophwrp.h"
-#include "ophpointcloud.h"
+#include "ophwrp2.h"
+
 
 // Define I/O Data File Path
-#define INPUT_3D_MODEL	"TestPointCloud.dat" // 3D Point Cloud Data Base
-#define INPUT_CONFIG	"TestSpec.config" // Parameters Config Specification
-#define OUTPUT_BMP		"result/Result_FringePattern" // Fringe Pattern Image Output Bitmap File Name
+#define INPUT_3D_MODEL	"TestPointCloud_WRP.ply" // 3D Point Cloud Data Base
+#define INPUT_CONFIG	"TestSpecWRP.xml" // Parameters Config Specification
+#define OUTPUT_BMP		"result/Result_WRP.bmp" // WRP complex field Image Output Bitmap File Name
 
 int main(int argc, char **argv)
 {
 	cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
 
-	ophWRP ow;
+	ophWRP* ow=new ophWRP();
 
-	bool colorinfo = true;
-
-	if (ow.loadwPointCloud(INPUT_3D_MODEL,colorinfo) == -1)
-	{ 
-		cerr << "Failed to load Point Cloud Data File(*.dat)" << endl;
-		return -1;
-	}
-	
-	if (!ow.readConfig(INPUT_CONFIG))
-	{
-		cerr << "Failed to load Config Specification Data File(*.config)" << endl;
-		return -1;
-	}
+	ow->loadPointCloud(INPUT_3D_MODEL);
+	ow->readConfig(INPUT_CONFIG);
 
 	int n = 3;
-	double time = ow.calculateWRP(0.005);
+	double time = ow->calculateWRP(0.5e-3);
+	
+	ow->encodefield();
+
+	ow->normalize();
+
+	ow->save(OUTPUT_BMP);
+
+	ow->release();
 
 	return 0;
 
