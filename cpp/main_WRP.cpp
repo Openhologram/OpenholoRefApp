@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-#include "ophwrp2.h"
+#include "ophwrp.h"
 
 
 // Define I/O Data File Path
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
 	cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
 
-	ophWRP* ow=new ophWRP();
+	ophWRP* ow=new ophWRP;
 
 	ow->loadPointCloud(INPUT_3D_MODEL);
 	ow->readConfig(INPUT_CONFIG);

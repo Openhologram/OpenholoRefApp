@@ -1,5 +1,7 @@
 #include "ophTriMesh.h"
 
+#include <fstream>
+
 using namespace std;
 
 
@@ -20,6 +22,8 @@ int main(void)
 	Hologram->setObjSize(scale);
 	Hologram->setObjShift(shift);
 
+	Hologram->readMeshConfig("testMeshXML.xml");
+
 	Hologram->objScaleShift();
 
 	Hologram->setShadingType(Hologram->SHADING_FLAT);
@@ -34,7 +38,10 @@ int main(void)
 
 	Hologram->normalizeEncoded();
 
+	auto norm = Hologram->getNormalizedBuffer();
+
 	ivec2 encode_size = Hologram->getEncodeSize();
+
 	Hologram->save("result/Mesh.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
 
 	cin.get();
