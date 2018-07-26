@@ -17,7 +17,7 @@ int main(void)
 
 	ivec2 encode_size = Hologram->getEncodeSize();
 
-	Hologram->save("result/Encoding_OFFSSB_RIGHT.bmp",8,nullptr,encode_size[_X], encode_size[_Y]);
+	Hologram->save("result/Encoding.bmp",8,nullptr,encode_size[_X], encode_size[_Y]);
 	
 	return 0;
 
