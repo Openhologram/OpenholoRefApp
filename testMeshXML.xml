@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<testMeshXML>
+
+  <MeshDataFileName>mesh_teapot.txt</MeshDataFileName>
+  
+  <ObjectSize>10*8e-6*0.8</ObjectSize>
+
+  <ObjectShiftX>0.0</ObjectShiftX>
+  <ObjectShiftY>0.0</ObjectShiftY>
+  <ObjectShiftZ>0.02</ObjectShiftZ>
+
+  <LampDirectionX>0</LampDirectionX>
+  <LampDirectionY>0</LampDirectionY>
+  <LampDirectionZ>1</LampDirectionZ>
+  
+  <SLMpixelNumX>100</SLMpixelNumX>
+  <SLMpixelNumY>100</SLMpixelNumY>
+  
+  <SLMpixelPitchX>8e-6</SLMpixelPitchX>
+  <SLMpixelPitchY>8e-6</SLMpixelPitchY>
+  
+  <WavelengthofLaser>0.000000532</WavelengthofLaser>
+
+  <MeshShadingType>SHADING_FLAT</MeshShadingType>
+
+  <EncodingMethod>ENCODE_AMPLITUDE</EncodingMethod>
+
+</testMeshXML>
