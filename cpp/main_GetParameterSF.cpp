@@ -8,7 +8,7 @@ int main(void)
 
 	float depth = 0;
 
-	if (!holo->loadParam("holoParam.ini")) {
+	if (!holo->loadParam("config/holoParam.ini")) {
 		// no file 
 		return false;
 	}

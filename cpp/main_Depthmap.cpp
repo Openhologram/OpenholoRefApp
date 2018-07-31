@@ -9,8 +9,8 @@ int main(int argc, char **argv)
 
 	ophDepthMap* Hologram = new ophDepthMap();
 
-	Hologram->setMode(MODE_CPU); //Select CPU or GPU Processing
-	Hologram->readConfig("TestSpecDepthMap.xml");
+	Hologram->setMode(MODE_GPU); //Select CPU or GPU Processing
+	Hologram->readConfig("config/TestSpecDepthMap.xml");
 
 	Hologram->generateHologram();
 	Hologram->encodeHologram();
