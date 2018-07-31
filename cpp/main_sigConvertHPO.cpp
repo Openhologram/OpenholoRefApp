@@ -6,7 +6,7 @@ int main() {
 
 	ophSigConvert *holo = new ophSigConvert();
 
-	if (!holo->loadParam("holoParam.ini")) {
+	if (!holo->loadParam("config/holoParam.ini")) {
 		// no file 
 		return false;
 	}

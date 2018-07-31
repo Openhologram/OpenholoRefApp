@@ -14,7 +14,7 @@ int main(void)
 	Hologram->setPixelPitch(8e-6, 8e-6);
 	Hologram->setWaveLength(532e-9);
 
-	Hologram->readLFConfig("LF_config.xml");
+	Hologram->readLFConfig("config/TestSpecLF.xml");
 
 	Hologram->loadLF("sample_orthographic_images","bmp");
 

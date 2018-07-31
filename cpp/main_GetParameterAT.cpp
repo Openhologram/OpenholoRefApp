@@ -9,7 +9,7 @@ int main(void)
 	float depth = 0;
 	float lambda = 0.000000532;
 
-	if (!holo->loadParam("holoParam.ini")) {
+	if (!holo->loadParam("config/holoParam.ini")) {
 		// no file 
 		return false;
 	}

@@ -1,6 +1,6 @@
 <testMeshXML>
 
-  <MeshDataFileName>mesh_teapot.txt</MeshDataFileName>
+  <MeshDataFileName>source/mesh_teapot.txt</MeshDataFileName>
   
   <ObjectSize>0.0048</ObjectSize>
 
