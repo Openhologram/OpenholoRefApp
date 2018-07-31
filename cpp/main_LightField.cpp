@@ -16,7 +16,7 @@ int main(void)
 
 	Hologram->readLFConfig("config/TestSpecLF.xml");
 
-	Hologram->loadLF("sample_orthographic_images","bmp");
+	Hologram->loadLF("source/sample_orthographic_images","bmp");
 
 	Hologram->generateHologram();
 
