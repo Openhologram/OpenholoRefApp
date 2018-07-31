@@ -1,13 +1,19 @@
 <TestSpecWRP>
-  <ScalingXofPointCloud>0.05</ScalingXofPointCloud>
-  <ScalingYofPointCloud>0.05</ScalingYofPointCloud>
-  <ScalingZofPointCloud>0.05</ScalingZofPointCloud>
+  <ScalingXofPointCloud>1</ScalingXofPointCloud>
+  <ScalingYofPointCloud>1</ScalingYofPointCloud>
+  <ScalingZofPointCloud>1</ScalingZofPointCloud>
+  <OffsetInDepth>1</OffsetInDepth>
   <SLMpixelPitchX>0.000008</SLMpixelPitchX>
   <SLMpixelPitchY>0.0000039</SLMpixelPitchY>
   <SLMpixelNumX>1920</SLMpixelNumX>
   <SLMpixelNumY>1080</SLMpixelNumY>
-   <Wavelength>0.000000532</Wavelength>
-  <NumberOfWRP>1</NumberOfWRP>
-  <LocationOfWRP>0.5e-3</LocationOfWRP>
-  <PropagationDistance>0.05</PropagationDistance>
-  </TestSpecWRP>
+  <BandpassFilterShape>circle</BandpassFilterShape>
+  <BandpassFilterWidthX>1</BandpassFilterWidthX>
+  <BandpassFilterWidthY>1</BandpassFilterWidthY>
+  <FocalLengthofInputLens>200</FocalLengthofInputLens>
+  <FocalLengthofOutputLens>200</FocalLengthofOutputLens>
+  <FocalLengthofEyepieceLens>75</FocalLengthofEyepieceLens>
+  <WavelengthofLaser>0.000000532</WavelengthofLaser>
+  <TiltAngleX>0</TiltAngleX>
+  <TiltAngleY>0</TiltAngleY>
+</TestSpecWRP>
