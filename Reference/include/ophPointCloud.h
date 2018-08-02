@@ -14,6 +14,24 @@
 #include <omp.h>
 #endif
 
+/* CUDA Library Include */
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+#include <device_functions.h>
+#include <device_launch_parameters.h>
+
+#define __CUDA_INTERNAL_COMPILATION__ //for CUDA Math Module
+#include <math_constants.h>
+#include <math_functions.h> //Single Precision Floating
+//#include <math_functions_dbl_ptx3.h> //Double Precision Floating
+#include <vector_functions.h> //Vector Processing Function
+
+#undef __CUDA_INTERNAL_COMPILATION__
+
+#define THREAD_X 32
+#define THREAD_Y 16
+
 /* Bitmap File Definition*/
 #define OPH_Bitsperpixel 8 //24 // 3byte=24 
 #define OPH_Planes 1
@@ -73,21 +91,25 @@ public:
 	/** \ingroup getter/setter */
 	inline void getTiltAngle(vec2& tiltangle) { tiltangle = pc_config_.tilt_angle; }
 	/** \ingroup getter/setter */
-	inline Real** getVertex(void) { return &pc_data_.vertex; }
+	inline vec3* getLocationPC(void) { return pc_data_.location; }
 	/** \ingroup getter/setter */
-	inline Real** getColorPC(void) { return &pc_data_.color; }
+	inline vec3* getColorPC(void) { return pc_data_.color; }
 	/** \ingroup getter/setter */
-	inline Real** getPhasePC(void) { return &pc_data_.phase; }
+	inline Real* getAmplitudePC(void) { return pc_data_.amplitude; }
 	/** \ingroup getter/setter */
-	inline void setPointCloudModel(Real* vertex, Real* color, Real *phase) {
-		pc_data_.vertex = vertex;
+	inline Real* getPhasePC(void) { return pc_data_.phase; }
+	/** \ingroup getter/setter */
+	inline void setPointCloudModel(vec3* location, vec3 *color, Real *amplitude, Real *phase) {
+		pc_data_.location = location;
 		pc_data_.color = color;
+		pc_data_.amplitude = amplitude;
 		pc_data_.phase = phase;
 	}
 	/** \ingroup getter/setter */
-	inline void getPointCloudModel(Real *vertex, Real *color, Real *phase) {
-		getModelLocation(vertex);
+	inline void getPointCloudModel(vec3 *location, vec3 *color, Real *amplitude, Real *phase) {
+		getModelLocation(location);
 		getModelColor(color);
+		getModelAmplitude(amplitude);
 		getModelPhase(phase);
 	}
 
@@ -102,12 +124,14 @@ public:
 	* @param Amplitude 3D Point Cloud Model Amplitude Data of Point-Based Light Wave
 	* @param Phase 3D Point Cloud Model Phase Data of Point-Based Light Wave
 	*/
-	inline void getModelLocation(Real *vertex) { vertex = pc_data_.vertex; }
-	inline void getModelColor(Real *color) { color = pc_data_.color; }
+	inline void getModelLocation(vec3 *location) { location = pc_data_.location; }
+	inline void getModelColor(vec3 *color) { color = pc_data_.color; }
+	inline void getModelAmplitude(Real *amplitude) { amplitude = pc_data_.amplitude; }
 	inline void getModelPhase(Real *phase) { phase = pc_data_.phase; }
 	inline int getNumberOfPoints() { return n_points; }
 
 public:
+	void initialize(void);
 	/**
 	* @brief Set the value of a variable is_CPU(true or false)
 	* @details <pre>
@@ -131,7 +155,7 @@ public:
 	* @param InputModelFile PointCloud(*.dat) input file path
 	* @return number of Pointcloud (if it failed loading, it returned -1)
 	*/
-	virtual int loadPointCloud(const char* pc_file);
+	virtual int loadPointCloud(const char* pc_file, uint flag = PC_XYZ | PC_PHASE | PC_AMPLITUDE);
 
 	/**
 	\defgroup Import_Configfile
@@ -148,7 +172,8 @@ public:
 	* @brief Generate a hologram, main funtion.
 	* @return implement time (sec)
 	*/
-	double generateHologram(uint diff_flag = PC_DIFF_RS_ENCODED);
+	double generateHologram();
+	double diffract(void);
 	void encode(void);
 
 private:
@@ -163,11 +188,7 @@ private:
 	* @param dst Output Fringe Pattern
 	* @return implement time (sec)
 	*/
-	void genCghPointCloudCPU(uint diff_flag);
-	void diffractEncodedRS(ivec2 pn, vec2 pp, vec2 ss, vec3 vertex, Real k, Real amplitude, vec2 theta);
-	void diffractNotEncodedRS(ivec2 pn, vec2 pp, vec2 ss, vec3 pc, Real k, Real amplitude, Real lambda);
-	void diffractEncodedFrsn(void);
-	void diffractNotEncodedFrsn(ivec2 pn, vec2 pp, vec3 pc, Real amplitude, Real lambda);
+	void genCghPointCloudCPU(Real* dst);
 
 	/**
 	* @overload
@@ -189,7 +210,7 @@ private:
 	* @param dst Output Fringe Pattern
 	* @return implement time (sec)
 	*/
-	void genCghPointCloudGPU(uint diff_flag);
+	void genCghPointCloudGPU(Real* dst);
 
 	/** @}	*/
 
@@ -208,5 +229,10 @@ private:
 	OphPointCloudConfig pc_config_;
 	OphPointCloudData	pc_data_;
 };
+
+extern "C"
+{
+	void cudaPointCloudKernel(const int block_x, const int block_y, const int thread_x, const int thread_y, float3 *PointCloud, Real *amplitude, const GpuConst *Config, Real *dst);
+}
 
 #endif // !__ophPointCloud_h
