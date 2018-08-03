@@ -16,7 +16,6 @@ namespace oph
 	typedef unsigned int uint;
 	typedef unsigned char uchar;
 	typedef unsigned long ulong;
-	typedef long long longlong;
 	typedef unsigned long long ulonglong;
 
 
