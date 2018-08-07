@@ -5,16 +5,10 @@ using namespace std;
 
 int main(void)
 {
+
 	ophLF* Hologram = new ophLF();
 
-	Hologram->setNumImage(20, 20);
-	Hologram->setResolImage(200, 200);
-
-	Hologram->setPixelNumber(4000, 4000);
-	Hologram->setPixelPitch(8e-6, 8e-6);
-	Hologram->setWaveLength(532e-9);
-
-	Hologram->readLFConfig("LF_config.xml");
+	Hologram->readLFConfig("testLFXML.xml");
 
 	Hologram->loadLF("sample_orthographic_images","bmp");
 
@@ -22,7 +16,7 @@ int main(void)
 
 	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);
 
-	Hologram->normalizeEncoded();
+	Hologram->normalize();
 
 	ivec2 encode_size = Hologram->getEncodeSize();
 

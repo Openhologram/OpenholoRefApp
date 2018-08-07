@@ -1,7 +1,5 @@
 <testMeshXML>
 
-  <MeshDataFileName>mesh_teapot.txt</MeshDataFileName>
-  
   <ObjectSize>0.0048</ObjectSize>
 
   <ObjectShiftX>0.0</ObjectShiftX>

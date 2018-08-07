@@ -9,20 +9,9 @@ int main(void)
 {
 	ophTri* Hologram = new ophTri();
 	
-	//Hologram->loadMeshData("mesh_teapot.txt");
-
-	//Hologram->setPixelNumber(1000, 1000);
-	//Hologram->setPixelPitch(8e-6, 8e-6);
-	//Hologram->setWaveLength(532e-9);
-	//Hologram->setIllumination(0, 0, 1);
-	
-	//Real scale = 1000*8e-6*0.6;
-	//Real shift[3] = { 0, 0, 0.02 };
-
-	//Hologram->setObjSize(scale);
-	//Hologram->setObjShift(shift);
-
 	Hologram->readMeshConfig("testMeshXML.xml");
+
+	Hologram->loadMeshData("mesh_teapot.txt");
 
 	Hologram->objScaleShift();
 
