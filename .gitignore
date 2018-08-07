@@ -328,3 +328,15 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+Reference/dll/openholo.dll
+Reference/dll/openholo.dll
+Reference/dll/ophdis.dll
+Reference/include/ophCascadedPropagation.h
+Reference/include/ophDis.h
+Reference/lib/ophdis.lib
+Reference/dll/openholo.dll
+Reference/dll/ophdis.dll
+Reference/include/ophCascadedPropagation.h
+Reference/include/ophDis.h
+Reference/lib/ophdis.lib
+Reference/dll/openholo.dll

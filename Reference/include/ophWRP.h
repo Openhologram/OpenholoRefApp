@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 
 #include "ophGen.h"
+//#include "complex.h"
 
 //Build Option : Multi Core Processing (OpenMP)
 #ifdef _OPENMP
@@ -22,7 +23,9 @@
 
 using namespace oph;
 
-class ophWRP : public ophGen
+
+
+class GEN_DLL ophWRP : public ophGen
 {
 
 public:
@@ -40,53 +43,31 @@ protected:
 
 public:
 
-	/**
-	\defgroup PointCloud_Load
-	* @brief override
-	* @{
-	* @brief Import Point Cloud Data Base File : *.PYL file.
-	* This Function is included memory location of Input Point Clouds.
-	*/
-	/**
-	* @brief override
-	* @param InputModelFile PointCloud(*.PYL) input file path
-	* @return number of Pointcloud (if it failed loading, it returned -1)
-	*/
-	virtual int loadPointCloud(const char* pc_file);
-
+	int loadwPointCloud(const char* pc_file, bool colorinfo);
 	virtual bool readConfig(const char* cfg_file);
-
-	virtual void normalize(void);
-
-	void initialize();
-
-	void encodefield(void);
-
 	double calculateWRP(double wrp_d);
-
-	oph::Complex<Real>** calculateMWRP(int n);
-
-	inline oph::Complex<Real>* getWRPBuff(void) { return p_wrp_; };
-
+	oph::Complex<Real>** calculateWRP(int n);
 
 private:
-
-	Complex<Real>* ophWRP::calSubWRP(double d, oph::Complex<Real>* wrp, OphPointCloudData* sobj);
-
+	inline oph::Complex<Real>* getWRPBuff(void) { return p_wrp_; };
+	OphPointCloudData* vector2pointer(std::vector<OphPointCloudData> vec);
+	Complex<Real>* ophWRP::subWRP_calcu(double d, oph::Complex<Real>* wrp, OphPointCloudData* sobj);
+	int pobj2vecobj();
 	void AddPixel2WRP(int x, int y, oph::Complex<Real> temp);
-
 	void AddPixel2WRP(int x, int y, oph::Complex<Real> temp, oph::Complex<Real>* wrp);
-
-	virtual void ophFree(void);
 
 protected:
 
 	int n_points;   //number of points
-
+	std::vector<Real> vertex_array_;
+	std::vector<Real> amplitude_array_;
+	std::vector<Real> phase_array_;
 
 	oph::Complex<Real>* p_wrp_;   //wrp buffer
+	OphPointCloudData* obj_;
+	vector<OphPointCloudData> vec_obj;
 
-	OphPointCloudData obj_;
+	//	ophObjPoint* obj_;   
 
 	OphPointCloudConfig pc_config_;
 

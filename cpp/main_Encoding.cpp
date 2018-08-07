@@ -8,10 +8,9 @@ int main(void)
 {
 	ophPointCloud* Hologram = new ophPointCloud();
 
-	Hologram->loadComplex("teapot_real_1920,1080.txt", "teapot_imag_1920,1080.txt", 1920, 1080);
+	Hologram->loadComplex("source/teapot_real_1920,1080.txt", "source/teapot_imag_1920,1080.txt", 1920, 1080);
 
 	Hologram->encoding(ophGen::ENCODE_TWOPHASE);
-	//Hologram->encoding(Hologram->ENCODE_SSB, Hologram->SSB_LEFT);
 
 	Hologram->normalizeEncoded();
 

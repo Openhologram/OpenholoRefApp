@@ -10,12 +10,15 @@ int main(int argc, char **argv)
 	ophDepthMap* Hologram = new ophDepthMap();
 
 	Hologram->setMode(MODE_GPU); //Select CPU or GPU Processing
-	Hologram->readConfig("TestSpecDepthMap.xml");
+	Hologram->readConfig("config/TestSpecDepthMap.xml");
+	Hologram->readImageDepth("source", "RGB_D", "D_D");
 
 	Hologram->generateHologram();
 	Hologram->encodeHologram();
 	Hologram->normalize();
+	Hologram->save("result/Result_DepthmapSample.bmp");
 
-	Hologram->save();
 	Hologram->release();
+
+	return 0;
 }
