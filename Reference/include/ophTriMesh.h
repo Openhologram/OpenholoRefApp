@@ -86,9 +86,9 @@ private:
 	uint findGeometricalRelations(Real* mesh, vec3 no);
 	void calGlobalFrequency();
 	uint calFrequencyTerm();
-	uint refAS_Flat(vec3 no);
+	uint refAS_Flat(vec3 na);
 	uint refAS_Continuous();
-	uint findNormalForContinuous();
+	uint findNormalForContinuous(vec3 na);
 	void refToGlobal();
 
 

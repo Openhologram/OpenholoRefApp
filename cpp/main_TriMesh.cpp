@@ -5,8 +5,11 @@ using namespace std;
 int main(void)
 {
 	ophTri* Hologram = new ophTri();
+	
+	Hologram->readMeshConfig("testMeshXML.xml");
 
-	Hologram->readMeshConfig("config/TestSpecMesh.xml");
+	Hologram->loadMeshData("mesh_teapot.txt");
+
 	Hologram->objScaleShift();
 
 	Hologram->generateMeshHologram(Hologram->SHADING_FLAT);
