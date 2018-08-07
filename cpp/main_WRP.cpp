@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 	Hologram->readConfig("config/TestSpecWRP.xml");
 	Hologram->loadPointCloud("source/TestPointCloud_WRP.ply");
 
-	Hologram->calculateWRP();
+	Hologram->calculateMWRP();
 	Hologram->generateHologram();
-	Hologram->encodefield();
+	Hologram->encodeHologram();
 	Hologram->normalize();
 	Hologram->save("result/Result_WRP.bmp");
 

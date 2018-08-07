@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-	OphCascadedPropagation* pCp = new OphCascadedPropagation(L"TestSpecCascadedPropagation.xml");
+	OphCascadedPropagation* pCp = new OphCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");
 	if (pCp->propagate())
 		pCp->saveIntensityAsImg(L"result/intensityRGB.bmp", pCp->GetNumColors() * 8);
 

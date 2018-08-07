@@ -14,9 +14,9 @@ int main(int argc, char **argv)
 	Hologram->loadPointCloud("source/TestPointCloud.ply");
 
 	Hologram->generateHologram(PC_DIFF_RS_NOT_ENCODED);
-	Hologram->encode();
+	Hologram->encodeHologram();
 	Hologram->normalize();
-	Hologram->save("result/Result_FringePattern");
+	Hologram->save("result/Result_PointCloudSample");
 
 	Hologram->release();
 
