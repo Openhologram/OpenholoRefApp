@@ -3,8 +3,8 @@
   <ScalingYofPointCloud>0.005</ScalingYofPointCloud>
   <ScalingZofPointCloud>0.005</ScalingZofPointCloud>
   <OffsetInDepth>0.1</OffsetInDepth>
-  <SLMpixelPitchX>0.00000762</SLMpixelPitchX>
-  <SLMpixelPitchY>0.00000762</SLMpixelPitchY>
+  <SLMpixelPitchX>0.0000043</SLMpixelPitchX>
+  <SLMpixelPitchY>0.0000043</SLMpixelPitchY>
   <SLMpixelNumX>1920</SLMpixelNumX>
   <SLMpixelNumY>1080</SLMpixelNumY>
   <BandpassFilterShape>circle</BandpassFilterShape>
