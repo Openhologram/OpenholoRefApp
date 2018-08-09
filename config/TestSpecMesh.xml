@@ -1,8 +1,6 @@
 <testMeshXML>
 
-  <MeshDataFileName>source/mesh_teapot.txt</MeshDataFileName>
-  
-  <ObjectSize>0.0048</ObjectSize>
+  <ObjectSize>0.0032</ObjectSize>
 
   <ObjectShiftX>0.0</ObjectShiftX>
   <ObjectShiftY>0.0</ObjectShiftY>
@@ -12,8 +10,8 @@
   <LampDirectionY>0</LampDirectionY>
   <LampDirectionZ>1</LampDirectionZ>
   
-  <SLMPixelNumX>1000</SLMPixelNumX>
-  <SLMPixelNumY>1000</SLMPixelNumY>
+  <SLMPixelNumX>500</SLMPixelNumX>
+  <SLMPixelNumY>500</SLMPixelNumY>
   
   <SLMPixelPitchX>8e-6</SLMPixelPitchX>
   <SLMPixelPitchY>8e-6</SLMPixelPitchY>

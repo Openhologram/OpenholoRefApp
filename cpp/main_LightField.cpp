@@ -7,13 +7,6 @@ int main(void)
 {
 	ophLF* Hologram = new ophLF();
 
-	Hologram->setNumImage(20, 20);
-	Hologram->setResolImage(200, 200);
-
-	Hologram->setPixelNumber(4000, 4000);
-	Hologram->setPixelPitch(8e-6, 8e-6);
-	Hologram->setWaveLength(532e-9);
-
 	Hologram->readLFConfig("config/TestSpecLF.xml");
 
 	Hologram->loadLF("source/sample_orthographic_images","bmp");
