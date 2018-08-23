@@ -12,7 +12,7 @@ int main(void)
 	
 	Hologram->objScaleShift();
 
-	Hologram->generateMeshHologram(Hologram->SHADING_CONTINUOUS);
+	Hologram->generateMeshHologram(Hologram->SHADING_FLAT);
 	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);
 	Hologram->normalizeEncoded();
 	ivec2 encode_size = Hologram->getEncodeSize();

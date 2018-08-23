@@ -1,17 +1,17 @@
 <testMeshXML>
 
-  <ObjectSize>0.0032</ObjectSize>
+  <ObjectSize>0.005</ObjectSize>
 
   <ObjectShiftX>0.0</ObjectShiftX>
   <ObjectShiftY>0.0</ObjectShiftY>
-  <ObjectShiftZ>0.02</ObjectShiftZ>
+  <ObjectShiftZ>0.001</ObjectShiftZ>
 
   <LampDirectionX>0</LampDirectionX>
   <LampDirectionY>0</LampDirectionY>
   <LampDirectionZ>1</LampDirectionZ>
   
-  <SLMPixelNumX>500</SLMPixelNumX>
-  <SLMPixelNumY>500</SLMPixelNumY>
+  <SLMPixelNumX>1920</SLMPixelNumX>
+  <SLMPixelNumY>1080</SLMPixelNumY>
   
   <SLMPixelPitchX>8e-6</SLMPixelPitchX>
   <SLMPixelPitchY>8e-6</SLMPixelPitchY>
