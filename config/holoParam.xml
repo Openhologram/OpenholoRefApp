@@ -6,8 +6,8 @@
   <wavelength>0.000000532</wavelength>
   <NA>0.5</NA>
   <z>-0.1</z>
-  <angle_X>10</angle_X>
-  <angle_Y>10</angle_Y>
+  <angle_X>0</angle_X>
+  <angle_Y>5</angle_Y>
   <reduction_rate>0.022</reduction_rate>
   <radius_of_lens>0.01</radius_of_lens>
   <focal_length_R>0.0259</focal_length_R>
