@@ -11,12 +11,12 @@ int main(int argc, char **argv)
 
 	Hologram->setMode(MODE_CPU); //Select CPU or GPU Processing
 	Hologram->readConfig("config/TestSpecPointCloud.xml");
-	Hologram->loadPointCloud("source/TestPointCloud.ply");
+	Hologram->loadPointCloud("source/TestPointCloud_Saturn.ply");
 
 	Hologram->generateHologram(PC_DIFF_RS_NOT_ENCODED);
 	Hologram->encodeHologram();
 	Hologram->normalize();
-	Hologram->save("result/Result_PointCloudSample");
+	Hologram->save("result/Result_PointCloudSample_Saturn");
 
 	Hologram->release();
 

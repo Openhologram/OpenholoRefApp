@@ -2,7 +2,7 @@
   <ScalingXofPointCloud>0.01</ScalingXofPointCloud>
   <ScalingYofPointCloud>0.01</ScalingYofPointCloud>
   <ScalingZofPointCloud>0.01</ScalingZofPointCloud>
-  <OffsetInDepth>0.1</OffsetInDepth>
+  <OffsetInDepth>0.3</OffsetInDepth>
   <SLMpixelPitchX>0.0000043</SLMpixelPitchX>
   <SLMpixelPitchY>0.0000043</SLMpixelPitchY>
   <SLMpixelNumX>1920</SLMpixelNumX>
