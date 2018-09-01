@@ -18,7 +18,7 @@ int main() {
 
 	holo->sigConvertOffaxis();
 	
-	holo->save("result/Off_axis_re_C.bmp", "result/Off_axis_im_C.bmp",8);
+	holo->save("result/Off_axis.bmp",8);
 
 	return 0;
 }
