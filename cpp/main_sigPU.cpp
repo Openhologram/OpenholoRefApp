@@ -18,5 +18,7 @@ int main() {
 	// Save results
 	holo->savePhaseUnwrapped("result/PU_Test.bmp");
 
+	holo->release();
+
 	return 0;
 }

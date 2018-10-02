@@ -20,6 +20,7 @@ int main() {
 
 	// Save results
 	holo->saveNumRec("result/CH_Test.bmp");
+	holo->release();
 
 	return 0;
 }
