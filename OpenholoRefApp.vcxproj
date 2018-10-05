@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OpenholoExamples.cpp" />
+    <ClCompile Include="cpp\OpenholoExamples.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23641D63-E44A-4425-804B-891108E134A4}</ProjectGuid>

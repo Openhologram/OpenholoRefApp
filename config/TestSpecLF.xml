@@ -8,8 +8,8 @@
   <NumberofImagesXofLF>20</NumberofImagesXofLF>
   <NumberofImagesYofLF>20</NumberofImagesYofLF>
 
-  <NumberofPixelXofLF>1920</NumberofPixelXofLF>
-  <NumberofPixelYofLF>1080</NumberofPixelYofLF>
+  <NumberofPixelXofLF>200</NumberofPixelXofLF>
+  <NumberofPixelYofLF>200</NumberofPixelYofLF>
 
   <WavelengthofLaser>532e-9</WavelengthofLaser>
 
