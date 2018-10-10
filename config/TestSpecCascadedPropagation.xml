@@ -11,6 +11,6 @@
   <DistReconstructionPlaneToPupil>0.225</DistReconstructionPlaneToPupil>
   <DistPupilToRetina>0.025</DistPupilToRetina>
   <PupilDiameter>0.004</PupilDiameter>
-  <HologramPath>source/DMDG_RGB_CP.bmp</HologramPath>
+  <HologramPath>source/CascadedPropagation/DMDG_RGB_CP.bmp</HologramPath>
   <Nor>0.1</Nor>       <!-- scaling term in Chang Eun Young's implementation -->  
 </TestSpecCascadedPropagation>

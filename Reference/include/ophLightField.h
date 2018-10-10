@@ -137,7 +137,7 @@ public:
 
 	/**
 	* @brief	Hologram generation
-	* @return	holo_gen
+	* @return	(*complex_H)
 	*/
 	void generateHologram();
 
@@ -148,9 +148,6 @@ protected:
 
 	void initializeLF();
 	void convertLF2ComplexField();
-
-public:
-	void waveCarry(Real carryingAngleX, Real carryingAngleY);
 
 private:
 	/**
