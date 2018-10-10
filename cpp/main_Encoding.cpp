@@ -8,15 +8,17 @@ int main(void)
 {
 	ophPointCloud* Hologram = new ophPointCloud();
 
-	Hologram->loadComplex("source/teapot_real_1920,1080.txt", "source/teapot_imag_1920,1080.txt", 1920, 1080);
+	// Load
+	Hologram->loadAsOhc("source/complex_field.ohc");		// Load the complex field file
 
-	Hologram->encoding(ophGen::ENCODE_AMPLITUDE);
+	// Encode
+	Hologram->encoding(ophGen::ENCODE_AMPLITUDE);		// Encode the hologram
+		/// Put the encoding type
 
-	Hologram->normalizeEncoded();
-
-	ivec2 encode_size = Hologram->getEncodeSize();
-
-	Hologram->save("result/Encoding.bmp",8,nullptr,encode_size[_X], encode_size[_Y]);
+	// Save
+	Hologram->normalizeEncoded();		// Normalize the encoded hologram to generate image file
+	ivec2 encode_size = Hologram->getEncodeSize();		// Encoded hologram size
+	Hologram->save("result/Encoding.bmp",8,nullptr,encode_size[_X], encode_size[_Y]);		// Save the encoded hologram image
 	
 	return 0;
 

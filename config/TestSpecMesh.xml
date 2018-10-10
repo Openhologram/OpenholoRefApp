@@ -1,22 +1,22 @@
 <testMeshXML>
 
-  <ObjectSize>0.001</ObjectSize>
+  <ObjectSize>0.005</ObjectSize>
 
   <ObjectShiftX>0.0</ObjectShiftX>
   <ObjectShiftY>0.0</ObjectShiftY>
-  <ObjectShiftZ>0.001</ObjectShiftZ>
+  <ObjectShiftZ>0.1</ObjectShiftZ>
 
   <LampDirectionX>0</LampDirectionX>
   <LampDirectionY>0</LampDirectionY>
   <LampDirectionZ>1</LampDirectionZ>
   
-  <SLMPixelNumX>1000</SLMPixelNumX>
-  <SLMPixelNumY>1000</SLMPixelNumY>
+  <SLMPixelNumX>1920</SLMPixelNumX>
+  <SLMPixelNumY>1080</SLMPixelNumY>
   
-  <SLMPixelPitchX>0.0000043</SLMPixelPitchX>
-  <SLMPixelPitchY>0.0000043</SLMPixelPitchY>
+  <SLMPixelPitchX>8e-6</SLMPixelPitchX>
+  <SLMPixelPitchY>8e-6</SLMPixelPitchY>
   
-  <WavelengthofLaser>0.000000633</WavelengthofLaser>
+  <WavelengthofLaser>532e-9</WavelengthofLaser>
 
   <!--<MeshShadingType>SHADING_FLAT</MeshShadingType>
 
