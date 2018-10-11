@@ -171,6 +171,8 @@ int main()
 		ivec2 encode_size = Hologram->getEncodeSize();
 
 		Hologram->save("result/Encoding/Encoding.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
+
+		Hologram->release();
 	}
 #endif
 #if WAVE_ABERR & true
@@ -221,6 +223,8 @@ int main()
 		holo->sigConvertOffaxis();
 
 		holo->save("result/OffAxis/Off_axis.bmp", 8);
+
+		holo->release();
 	}
 #endif
 #if CONV_CAC & true
@@ -242,6 +246,8 @@ int main()
 		holo->sigConvertCAC(0.000000633, 0.000000532, 0.000000473);
 
 		holo->save("result/CAC/CAC_re_C.bin", "result/CAC/CAC_im_C.bin", 24);
+
+		holo->release();
 	}
 #endif
 #if CONV_HPO & true
@@ -263,6 +269,8 @@ int main()
 		holo->sigConvertHPO();
 
 		holo->save("result/HPO/HPO_re_C.bmp", "result/HPO/HPO_im_C.bmp", 8);
+
+		holo->release();
 	}
 #endif
 #if GET_AT & true
@@ -289,6 +297,8 @@ int main()
 		holo->propagationHolo(-depth);
 
 		holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
+
+		holo->release();
 	}
 #endif
 #if GET_SF & true
@@ -377,5 +387,8 @@ int main()
 		holo->release();
 	}
 #endif
+
+
+
 	return 0;
 }
