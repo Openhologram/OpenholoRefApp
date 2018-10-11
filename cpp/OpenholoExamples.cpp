@@ -11,8 +11,8 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		false			// Point Cloud
-#define DEPTH_MAP		true			// Depth Map
+#define POINT_CLOUD		true			// Point Cloud
+#define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
 #define WRP				false			// WRP
@@ -66,7 +66,8 @@ int main()
 
 		Hologram->release();														// Release memory used to Generate Point Cloud
 	}
-#elif DEPTH_MAP & true
+#endif
+#if DEPTH_MAP & true
 	{
 		cout << "OpenHolo Library : Generation Hologram - Depth Map Example" << endl;
 
@@ -83,7 +84,8 @@ int main()
 
 		Hologram->release();														// Release memory used to Generate Depth Map
 	}
-#elif LIGHT_FIELD & true
+#endif
+#if LIGHT_FIELD & true
 	{
 		ophLF* Hologram = new ophLF();
 
@@ -109,7 +111,8 @@ int main()
 
 		Hologram->release();														// Release memory used to Generate Light Field
 	}
-#elif TRI_MESH & true
+#endif
+#if TRI_MESH & true
 	{
 		ophTri* Hologram = new ophTri();
 
@@ -136,7 +139,8 @@ int main()
 
 		Hologram->release();														// Release memory used to Generate Triangle Mesh
 	}
-#elif WRP & true
+#endif
+#if WRP & true
 	{
 		cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
 
@@ -153,7 +157,8 @@ int main()
 
 		Hologram->release();
 	}
-#elif ENCODE & true
+#endif
+#if ENCODE & true
 	{
 		ophPointCloud* Hologram = new ophPointCloud();
 
@@ -167,7 +172,8 @@ int main()
 
 		Hologram->save("result/Encoding/Encoding.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
 	}
-#elif WAVE_ABERR & true
+#endif
+#if WAVE_ABERR & true
 	{
 		ophWaveAberration* wa = new ophWaveAberration;
 
@@ -186,7 +192,8 @@ int main()
 
 		wa->release();
 	}
-#elif CAS_PROPA & true
+#endif
+#if CAS_PROPA & true
 	{
 		ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");
 		if (pCp->propagate())
@@ -194,7 +201,8 @@ int main()
 
 		pCp->release();
 	}
-#elif OFF_AXIS & true
+#endif
+#if OFF_AXIS & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - Off-axis hologram transform Example" << std::endl;
 
@@ -214,7 +222,8 @@ int main()
 
 		holo->save("result/OffAxis/Off_axis.bmp", 8);
 	}
-#elif CONV_CAC & true
+#endif
+#if CONV_CAC & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - CAC transform Example" << std::endl;
 
@@ -234,7 +243,8 @@ int main()
 
 		holo->save("result/CAC/CAC_re_C.bin", "result/CAC/CAC_im_C.bin", 24);
 	}
-#elif CONV_HPO & true
+#endif
+#if CONV_HPO & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - HPO transform Example" << std::endl;
 
@@ -254,7 +264,8 @@ int main()
 
 		holo->save("result/HPO/HPO_re_C.bmp", "result/HPO/HPO_im_C.bmp", 8);
 	}
-#elif GET_AT & true
+#endif
+#if GET_AT & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
@@ -279,7 +290,8 @@ int main()
 
 		holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 	}
-#elif GET_SF & true
+#endif
+#if GET_SF & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
@@ -305,7 +317,8 @@ int main()
 		holo->save("result/SF/SF_re.bmp", "result/SF/SF_im.bmp", 8);
 		holo->release();
 	}
-#elif SIG_PSDH & true
+#endif
+#if SIG_PSDH & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - Complex Field from Phase Shift Digital Hologram Example" << std::endl;
 
@@ -321,7 +334,8 @@ int main()
 		holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp", 8);
 		holo->release();
 	}
-#elif SIG_PU & true
+#endif
+#if SIG_PU & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - Phase Unwrapping Example" << std::endl;
 
@@ -340,7 +354,8 @@ int main()
 		holo->savePhaseUnwrapped("result/PhaseUnwrapping/PU_Test.bmp");
 		holo->release();
 	}
-#elif SIG_CH & true
+#endif
+#if SIG_CH & true
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - Compressed Holography Example" << std::endl;
 
