@@ -43,295 +43,6 @@
 //
 //M*/
 
-/**
-* @mainpage Openholo library Documentation
-* @section Introduction
-
-OpenHolo is an open source library which contains algorithms and their software implementation
-for generation of holograms to be applied in various fields. The goal behind the library development
-is facilitating production of digital holographic contents and expanding the area of their application.
-The developed by us open source library is a tool for computer generation of holograms, simulations and
-signal processing at various formats of 3D input data and properties of the 3D displays. Based on this,
-we want to lay the foundation for commercializing digital holographic service in various fields.
-
-
-* @section Examples
-
-Generation Hologram - Point Cloud Example
-
-@code
-	#include "ophPointCloud.h"
-
-	ophPointCloud* Hologram = new ophPointCloud();
-
-	Hologram->setMode(MODE_CPU); //Select CPU or GPU Processing
-	Hologram->readConfig("config/TestSpecPointCloud.xml");
-	Hologram->loadPointCloud("source/TestPointCloud_Saturn.ply");
-
-	Hologram->generateHologram(PC_DIFF_RS_NOT_ENCODED);
-	Hologram->encodeHologram();
-	Hologram->normalize();
-	Hologram->save("result/Result_PointCloudSample_Saturn");
-	Hologram->release();
-@endcode
-
-
-Generation Hologram - Depth Map Example
-
-@code
-	#include "ophDepthMap.h"
-
-	ophDepthMap* Hologram = new ophDepthMap();
-
-	Hologram->setMode(MODE_CPU); //Select CPU or GPU Processing
-	Hologram->readConfig("config/TestSpecDepthMap.xml");
-	Hologram->readImageDepth("source", "RGB_D", "D_D");
-
-	Hologram->generateHologram();
-	Hologram->encodeHologram();
-	Hologram->normalize();
-	Hologram->save("result/Result_DepthmapSample.bmp");
-	Hologram->release();
-@endcode
-
-
-Generation Hologram - Triangle Mesh Example
-
-@code
-	#include "ophTriMesh.h"
-
-	ophTri* Hologram = new ophTri();
-
-	Hologram->readMeshConfig("config/TestSpecMesh.xml");
-	Hologram->loadMeshData("source/mesh_teapot.ply","ply");
-	Hologram->objScaleShift();
-
-	Hologram->generateMeshHologram(Hologram->SHADING_FLAT);
-	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);
-	Hologram->normalizeEncoded();
-	ivec2 encode_size = Hologram->getEncodeSize();
-	Hologram->save("result/Mesh.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
-@endcode
-
-
-Generation Hologram - Light Field Example
-
-@code
-	#include "ophLightField.h"
-
-	ophLF* Hologram = new ophLF();
-
-	Hologram->readLFConfig("config/TestSpecLF.xml");
-	Hologram->loadLF("source/sample_orthographic_images","bmp");
-
-	Hologram->generateHologram();
-	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);
-	Hologram->normalizeEncoded();
-	ivec2 encode_size = Hologram->getEncodeSize();
-	Hologram->save("result/Light_Field.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
-@endcode
-
-
-Generation Hologram - Wavefront Recording Plane(WRP) Example
-
-@code
-	#include "ophWRP.h"
-
-	ophWRP* Hologram = new ophWRP();
-
-	Hologram->readConfig("config/TestSpecWRP.xml");
-	Hologram->loadPointCloud("source/TestPointCloud_WRP.ply");
-	Hologram->calculateMWRP();
-
-	Hologram->generateHologram();
-	Hologram->encodeHologram();
-	Hologram->normalize();
-	Hologram->save("result/Result_WRP.bmp");
-	Hologram->release();
-@endcode
-
-
-Encoding Example
-
-@code
-	#include "ophPointCloud.h"
-
-	ophPointCloud* Hologram = new ophPointCloud();
-
-	Hologram->loadComplex("source/teapot_real_1920,1080.txt", "source/teapot_imag_1920,1080.txt", 1920, 1080);
-	Hologram->encoding(ophGen::ENCODE_AMPLITUDE);
-	Hologram->normalizeEncoded();
-	ivec2 encode_size = Hologram->getEncodeSize();
-	Hologram->save("result/Encoding.bmp",8,nullptr,encode_size[_X], encode_size[_Y]);
-@endcode
-
-
-Wave Aberration Example
-
-@code
-	#include "ophWaveAberration.h"
-
-	ophWaveAberration* wa = new ophWaveAberration;
-
-	wa->readConfig("config/TestSpecAberration.xml"); // reads parameters from a configuration file
-	wa->accumulateZernikePolynomial(); // generates 2D complex data array of wave aberration according to parameters
-	wa->complex_W; // double pointer variable of 2D complex data array of wave aberration
-	wa->resolutionX; // resolution in x axis of 2D complex data array of wave aberration
-	wa->resolutionY; // resolution in y axis of 2D complex data array of wave aberration
-	wa->saveAberration("result/aberration.bin"); // saves 2D complex data array of complex wave aberration into a file
-
-	wa->readAberration("result/aberration.bin"); // reads 2D complex data array of complex wave aberration from a file
-	wa->complex_W; // double pointer variable of 2D complex data array of wave aberration
-	wa->resolutionX; // resolution in x axis of 2D complex data array of wave aberration
-	wa->resolutionY; // resolution in y axis of 2D complex data array of wave aberration
-	wa->release();
-@endcode
-
-
-Hologram core processing - HPO transform Example
-
-@code
-	#include "ophSig.h"
-
-	ophSig *holo = new ophSig();
-
-	if (!holo->readConfig("config/holoParam.xml")) {
-		// no file
-		return false;
-	}
-
-	if (!holo->load("source/3_point_re.bmp", "source/3_point_im.bmp", 8)) {
-		// no file
-		return false;
-	}
-
-	holo->sigConvertHPO();
-	holo->save("result/HPO_re_C.bmp", "result/HPO_im_C.bmp", 8);
-@endcode
-
-
-Hologram core processing - CAC transform Example
-
-@code
-	#include "ophSig.h"
-
-	ophSig *holo = new ophSig();
-
-	if (!holo->readConfig("config/holoParam.xml")) {
-		// no file
-		return false;
-	}
-
-	if (!holo->load("source/ColorPoint_re.bmp", "source/ColorPoint_im.bmp",24)) {
-		// no file
-		return false;
-	}
-
-	holo->sigConvertCAC(0.000000633,0.000000532,0.000000473);
-	holo->save("result/CAC_re_C.bin", "result/CAC_im_C.bin",24);
-@endcode
-
-
-Hologram core processing - Off-axis hologram transform Example
-
-@code
-	#include "ophSig.h"
-
-	ophSig *holo = new ophSig();
-
-	if (!holo->readConfig("config/holoParam.xml")) {
-		// no file
-		return false;
-	}
-
-	if (!holo->load("source/3_point_re.bmp", "source/3_point_im.bmp", 8)) {
-		// no file
-		return false;
-	}
-
-	holo->sigConvertOffaxis();
-	holo->save("result/Off_axis.bmp",8);
-@endcode
-
-
-Hologram core processing - get parameter using axis transformation Example
-
-@code
-	#include "ophSig.h"
-
-	ophSig* holo = new ophSig();
-
-	float depth = 0;
-
-	if (!holo->readConfig("config/holoParam.xml")) {
-		// no file
-		return false;
-	}
-
-	if (!holo->load("source/3_point_re.bmp", "source/3_point_im.bmp", 8)) {
-		// no file
-		return false;
-	}
-
-	depth = holo->sigGetParamSF(10, -10, 100, 0.3);
-	holo->propagationHolo(depth); // backpropagation
-	holo->save("result/SF_re.bmp", "result/SF_im.bmp", 8);
-@endcode
-
-
-@code
-	#include "ophSig.h"
-
-	ophSig* holo = new ophSig();
-
-	float depth = 0;
-
-	if (!holo->readConfig("config/holoParam.xml")) {
-		// no file
-		return false;
-	}
-
-	if (!holo->load("source/0.1point_re.bmp", "source/0.1point_im.bmp", 8)) {
-		// no file
-		return false;
-	}
-
-	depth = holo->sigGetParamAT();
-	holo->propagationHolo(-depth); // backpropagation
-	holo->save("result/AT_re.bmp", "result/AT_im.bmp", 8);
-@endcode
-
-
-Cascaded Propagation Example
-
-@code
-	#include "ophCascadedPropagation.h"
-
-	ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");
-
-	if (pCp->propagate())
-		pCp->saveIntensityAsImg(L"result/intensityRGB.bmp", pCp->getNumColors() * 8);
-
-	pCp->release();
-@endcode
-
-*
-*/
-
-
-/**
-* \defgroup const,dest Constructor & Destructor
-* \defgroup oper Operator
-* \defgroup get,set Parameters
-* \defgroup init Initialize
-* \defgroup calc Calculate
-* \defgroup gen Generate Hologram
-* \defgroup reconstruct Reconstruct Hologram
-* \defgroup signal Signal Processing
-* \defgroup encode Encoding
-* \defgroup read Read Data
-* \defgroup write Write Data
-*/
 
 #ifndef __Openholo_h
 #define __Openholo_h
@@ -347,7 +58,7 @@ Cascaded Propagation Example
 using namespace oph;
 
 
-struct OphConfig
+struct OPH_DLL OphConfig
 {
 	oph::ivec2		pixel_number;				//< SLM_PIXEL_NUMBER_X & SLM_PIXEL_NUMBER_Y
 	oph::vec2		pixel_pitch;				//< SLM_PIXEL_PITCH_X & SLM_PIXEL_PITCH_Y
@@ -358,34 +69,27 @@ struct OphConfig
 	Real*			wave_length;				//< wave length
 };
 
-//namespace oph{
-//	class ImgEncoderOhc;
-//	class ImgDecoderOhc;
-//	enum class LenUnit : uint8_t;
-//	enum class ColorType : uint8_t;
-//	enum class ColorArran : uint8_t;
-//	enum class DataType : uint8_t;
-//	enum class FldStore : uint8_t;
-//	enum class FldCodeType : uint8_t;
-//	enum class BPhaseCode : uint8_t;
-//	enum class ImageFormat : uint8_t;
-//}
+
+
+
+
+
 /**
+* @ingroup oph
 * @brief Abstract class
 * @detail Top class of Openholo library. Common functions required by subclasses are implemented.
+* @author Kim Ryeon-woo
 */
 class OPH_DLL Openholo : public Base{
 
 public:
 	/**
-	* \ingroup const,dest
 	* @brief Constructor
 	*/
 	explicit Openholo(void);
 
 protected:
 	/**
-	* \ingroup const,dest
 	* @brief Destructor
 	* @detail Pure virtual function for class abstraction
 	*/
@@ -403,7 +107,6 @@ protected:
 
 public:
 	/**
-	* \ingroup write
 	* @brief Function for creating image files
 	* @param const char* Output file name
 	* @param uint8_t Bit per pixel
@@ -416,7 +119,6 @@ public:
 	virtual int saveAsImg(const char* fname, uint8_t bitsperpixel, uchar* src, int pic_width, int pic_height);
 
 	/**
-	* \ingroup read
 	* @brief Function for loading image files
 	* @param const char* Input file name
 	* @return unsigned char* Image file's data
@@ -424,44 +126,23 @@ public:
 	virtual uchar* loadAsImg(const char* fname);
 
 	/**
-	* \ingroup write
 	* @brief Function to write OHC file
 	*/
 	virtual int saveAsOhc(const char *fname);
 
 	/**
-	* \ingroup read
 	* @brief Function to read OHC file
 	*/
 	virtual int loadAsOhc(const char *fname);
 
-	/**
-	* \ingroup get,set
-	*/
 	inline oph::Complex<Real>** getComplexField(void) { return complex_H; }
-
-	/**
-	* \ingroup get,set
-	*/
-	inline void setPixelNumber(ivec2 n) { context_.pixel_number[_X] = n[_X]; context_.pixel_number[_Y] = n[_Y]; }
-
-	/**
-	* \ingroup get,set
-	*/
-	inline void setPixelPitch(vec2 p) { context_.pixel_pitch[_X] = p[_X]; context_.pixel_pitch[_Y] = p[_Y]; }
-
-	/**
-	* \ingroup get,set
-	*/
-	inline void setWaveLength(Real w, const uint idx) { context_.wave_length[idx] = w; }
-
-	/**
-	* \ingroup get,set
-	*/
 	OphConfig& getContext(void) { return context_; }
+
+	inline void setPixelNumber(ivec2 n) { context_.pixel_number[_X] = n[_X]; context_.pixel_number[_Y] = n[_Y]; }
+	inline void setPixelPitch(vec2 p) { context_.pixel_pitch[_X] = p[_X]; context_.pixel_pitch[_Y] = p[_Y]; }
+	inline void setWaveLength(Real w, const uint idx) { context_.wave_length[idx] = w; }
 protected:
 	/**
-	* \ingroup read
 	* @brief Function for loading image files | Output image data upside down
 	* @param const char* Input file name
 	* @return unsigned char* Image file's data
@@ -469,7 +150,6 @@ protected:
 	int loadAsImgUpSideDown(const char* fname, uchar* dst);
 
 	/**
-	* \ingroup read
 	* @brief Function for getting the image size
 	* @param int& Image size - width
 	* @param int& Image size - Height
@@ -501,7 +181,6 @@ protected:
 
 
 	/**
-	* \ingroup calc
 	* @brief Functions for performing fftw 1-dimension operations inside Openholo
 	* @param int Number of data
 	* @param Complex<Real>* Source of data
@@ -510,7 +189,6 @@ protected:
 	*/
 	void fft1(int n, Complex<Real>* in, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
 	/**
-	* \ingroup calc
 	* @brief Functions for performing fftw 2-dimension operations inside Openholo
 	* @param oph::ivec2 Number of data(int x, int y)
 	* @param Complex<Real>* Source of data
@@ -519,7 +197,6 @@ protected:
 	*/
 	void fft2(oph::ivec2 n, Complex<Real>* in, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
 	/**
-	* \ingroup calc
 	* @brief Functions for performing fftw 3-dimension operations inside Openholo
 	* @param oph::ivec3 Number of data(int x, int y, int z)
 	* @param Complex<Real>* Source of data
@@ -529,14 +206,12 @@ protected:
 	void fft3(oph::ivec3 n, Complex<Real>* in, int sign = OPH_FORWARD, uint flag = OPH_ESTIMATE);
 
 	/**
-	* \ingroup calc
 	* @brief Execution functions to be called after fft1, fft2, and fft3
 	* @param Complex<Real>* Dest of data
 	*/
 	void fftExecute(Complex<Real>* out);
 	void fftFree(void);
 	/**
-	* \ingroup calc
 	* @brief Convert data from the spatial domain to the frequency domain using 2D FFT on CPU.
 	* @param Complex<Real>* Input data variable
 	* @param Complex<Real>* Output data variable
@@ -548,7 +223,6 @@ protected:
 	void fftwShift(Complex<Real>* src, Complex<Real>* dst, int nx, int ny, int type, bool bNormalized = false);
 
 	/**
-	* \ingroup calc
 	* @brief Swap the top-left quadrant of data with the bottom-right , and the top-right quadrant with the bottom-left.
 	* @param int the number of column of the input data
 	* @param int the number of row of the input data

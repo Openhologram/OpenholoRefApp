@@ -44,7 +44,7 @@ int main()
 
 		Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-		Hologram->generateHologram(PC_DIFF_RS_NOT_ENCODED);							// CGH by R-S Diffract
+		Hologram->generateHologram(PC_DIFF_RS);										// CGH by R-S Diffract
 		Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
 
 		Hologram->encodeHologram();													// Encode Complex Field to Real Field

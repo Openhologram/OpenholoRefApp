@@ -43,13 +43,6 @@
 //
 //M*/
 
-/**
-* @file		ophLightField.h
-* @brief	Openholo Light Field based CGH generation
-* @author	Yeon-Gyeong Ju, Jae-Hyeung Park
-* @data		2018-08
-* @version	0.0.1
-*/
 #ifndef __ophLightField_h
 #define __ophLightField_h
 
@@ -59,8 +52,19 @@
 
 using namespace oph;
 
+
 /**
-* @brief	Openholo Light Field based CGH generation class
+* @addtogroup lightfield
+//@{
+* @detail
+
+*/
+//! @} lightfield
+
+/**
+* @ingroup lightfield
+* @brief Openholo Light Field based CGH generation
+* @author Yeon-Gyeong Ju, Jae-Hyeung Park
 */
 class GEN_DLL ophLF : public ophGen
 {
@@ -77,40 +81,27 @@ protected:
 	virtual ~ophLF(void) {}
 
 private:
-	/**
-	* @param	uchar**			LF						Light Field array / 4-D array
-	* @param	Complex<Real>*	RSplane_complex_field	Complex field in Ray Sampling plane
-	*/
-	uchar** LF;
-	Complex<Real>* RSplane_complex_field;
+
+	uchar** LF;										/// Light Field array / 4-D array
+	Complex<Real>* RSplane_complex_field;			/// Complex field in Ray Sampling plane
 
 private:
-	/**
-	* @brief	Light Field save parameters
-	*/
+	
+	// Light Field save parameters
 
 	const char* LF_directory;
 	const char* ext;
+
 public:
-	/** \ingroup */
 	inline void setNumImage(int nx, int ny) { num_image[_X] = nx; num_image[_Y] = ny; }
-	/** \ingroup */
 	inline void setNumImage(ivec2 num) { num_image = num; }
-	/** \ingroup */
 	inline void setResolImage(int nx, int ny) { resolution_image[_X] = nx; resolution_image[_Y] = ny; }
-	/** \ingroup */
 	inline void setResolImage(ivec2 num) { resolution_image = num; }
-	/** \ingroup */
 	inline void setDistRS2Holo(Real dist) { distanceRS2Holo = dist; }
-	/** \ingroup */
 	inline ivec2 getNumImage() { return num_image; }
-	/** \ingroup */
 	inline ivec2 getResolImage() { return resolution_image; }
-	/** \ingroup */
 	inline Real getDistRS2Holo() { return distanceRS2Holo; }
-	/** \ingroup */
 	inline uchar** getLF() { return LF; }
-	/** \ingroup */
 	inline oph::Complex<Real>* getRSPlane() { return RSplane_complex_field; }
 public:
 	/**
@@ -124,6 +115,7 @@ public:
 	* @return	context_.lambda
 	*/
 	int readLFConfig(const char* LF_config);
+
 	/**
 	* @brief	Light Field images load
 	* @param	directory		Directory which has the Light Field source image files
@@ -142,23 +134,25 @@ public:
 	void generateHologram();
 
 protected:
-	/**
-	* @brief inner functions
-	*/
+	
+	// Inner functions
 
 	void initializeLF();
 	void convertLF2ComplexField();
 
-private:
+public:
 	/**
-	* @param	ivec2	num_image			The number of LF source images {numX, numY}
-	* @param	ivec2	resolution_image	Resolution of LF source images {resolutionX, resolutionY}
-	* @param	Real	distanceRS2Holo		Distance from Ray Sampling plane to Hologram plane
+	* @brief	Wave carry
+	* @param	Real	carryingAngleX		Wave carrying angle in horizontal direction
+	* @param	Real	carryingAngleY		Wave carrying angle in vertical direction
 	*/
+	void waveCarry(Real carryingAngleX, Real carryingAngleY);
 
-	ivec2 num_image;
-	ivec2 resolution_image;
-	Real distanceRS2Holo;
+private:
+	
+	ivec2 num_image;						/// The number of LF source images {numX, numY}
+	ivec2 resolution_image;					/// Resolution of LF source images {resolutionX, resolutionY}
+	Real distanceRS2Holo;					/// Distance from Ray Sampling plane to Hologram plane
 };
 
 
