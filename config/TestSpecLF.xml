@@ -5,8 +5,8 @@
   <SLMPixelPitchX>8e-6</SLMPixelPitchX>
   <SLMPixelPitchY>8e-6</SLMPixelPitchY>
 
-  <NumberofImagesXofLF>5</NumberofImagesXofLF>
-  <NumberofImagesYofLF>5</NumberofImagesYofLF>
+  <NumberofImagesXofLF>20</NumberofImagesXofLF>
+  <NumberofImagesYofLF>20</NumberofImagesYofLF>
 
   <NumberofPixelXofLF>200</NumberofPixelXofLF>
   <NumberofPixelYofLF>200</NumberofPixelYofLF>

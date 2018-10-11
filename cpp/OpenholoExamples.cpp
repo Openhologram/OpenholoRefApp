@@ -11,7 +11,7 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		true			// Point Cloud
+#define POINT_CLOUD		false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
@@ -91,7 +91,7 @@ int main()
 
 		// Load
 		Hologram->readLFConfig("config/TestSpecLF.xml");							// Read the LF hologram configuration file
-		Hologram->loadLF("source/LightField/sample_orthographic_images_5x5", "bmp");// Load the Light field source image files
+		Hologram->loadLF("source/LightField", "bmp");// Load the Light field source image files
 			/// Put the directory which has the source files and Put the image file type
 
 		// Generate
