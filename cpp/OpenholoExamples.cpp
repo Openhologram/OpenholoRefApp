@@ -15,7 +15,7 @@
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				false			// WRP
+#define WRP				true			// WRP
 
 #define ENCODE			false			// Encode
 
@@ -144,18 +144,19 @@ int main()
 	{
 		cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
 
-		ophWRP* Hologram = new ophWRP();
+		ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
-		Hologram->readConfig("config/TestSpecWRP.xml");
-		Hologram->loadPointCloud("source/WRP/TestPointCloud_WRP.ply");
+		Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorism
+		Hologram->loadPointCloud("source/WRP/TestPointCloud_WRP.ply");     // Load Point Cloud Data(*.PLY)
 
-		Hologram->calculateWRP();
-		Hologram->generateHologram();
-		Hologram->encodeHologram();
-		Hologram->normalize();
-		Hologram->save("result/WRP/Result_WRP.bmp");
 
-		Hologram->release();
+		Hologram->calculateWRP();                                          //  WRP generation 
+		Hologram->generateHologram();                                      // CGH from WRP
+		Hologram->encodeHologram();                                        // Encode Complex Field to Real Field
+		Hologram->normalize();                                             //Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+		Hologram->save("result/WRP/Result_WRP.bmp");                       // Save to bmp
+
+		Hologram->release();                                               // Release memory used to Generate Point Cloud 
 	}
 #endif
 #if ENCODE & true
