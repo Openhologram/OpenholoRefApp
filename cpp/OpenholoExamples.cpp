@@ -206,25 +206,31 @@ int main()
 	}
 #endif
 #if OFF_AXIS & true
-	{
+	{		
 		std::cout << "OpenHolo Library : Hologram core processing - Off-axis hologram transform Example" << std::endl;
 
+		//declaration ophSig class
 		ophSig *holo = new ophSig();
 
+		//read parameter
 		if (!holo->readConfig("config/holoParam.xml")) {
 			// no file 
 			return false;
 		}
 
+		//hologram data load
 		if (!holo->load("source/OffAxis/3_point_re.bmp", "source/OffAxis/3_point_im.bmp", 8)) {
 			// no file 
 			return false;
 		}
 
+		//run Convert Offaxis function
 		holo->sigConvertOffaxis();
 
+		//save hologram data for bmp file
 		holo->save("result/OffAxis/Off_axis.bmp", 8);
 
+		//release
 		holo->release();
 	}
 #endif
@@ -232,22 +238,28 @@ int main()
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - CAC transform Example" << std::endl;
 
+		//declaration ophSig class
 		ophSig *holo = new ophSig();
 
+		//read parameter
 		if (!holo->readConfig("config/holoParam.xml")) {
 			// no file 
 			return false;
 		}
 
+		//hologram data load
 		if (!holo->load("source/CAC/ColorPoint_re.bmp", "source/CAC/ColorPoint_im.bmp", 24)) {
 			// no file 
 			return false;
 		}
-
+		
+		//run convert chromatic aberration compensation
 		holo->sigConvertCAC(0.000000633, 0.000000532, 0.000000473);
 
+		//save hologram data for bmp file
 		holo->save("result/CAC/CAC_re_C.bin", "result/CAC/CAC_im_C.bin", 24);
 
+		//release
 		holo->release();
 	}
 #endif
@@ -255,22 +267,28 @@ int main()
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - HPO transform Example" << std::endl;
 
+		//declaration ophSig class
 		ophSig *holo = new ophSig();
 
+		//read parameter
 		if (!holo->readConfig("config/holoParam.xml")) {
 			// no file 
 			return false;
 		}
 
+		//hologram data load
 		if (!holo->load("source/HPO/3_point_re.bmp", "source/HPO/3_point_im.bmp", 8)) {
 			// no file 
 			return false;
 		}
 
+		//run convert horizontal parallax only hologram
 		holo->sigConvertHPO();
 
-		holo->save("result/HPO/HPO_re_C.bmp", "result/HPO/HPO_im_C.bmp", 8);
+		//save hologram data for bmp file
+		holo->save("result/HPO/HPO_re.bmp", "result/HPO/HPO_im.bmp", 8);
 
+		//release
 		holo->release();
 	}
 #endif
@@ -287,18 +305,24 @@ int main()
 			return false;
 		}
 
+		//hologram data load
 		if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp", 8)) {
 			// no file 
 			return false;
 		}
 
+		//get parameter using axis transformation
 		depth = holo->sigGetParamAT();
+
 		std::cout << depth << endl;
+
 		// backpropagation
 		holo->propagationHolo(-depth);
 
+		//save hologram data for bmp file
 		holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 
+		//release
 		holo->release();
 	}
 #endif
@@ -306,26 +330,34 @@ int main()
 	{
 		std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
+		////declaration ophSig class
 		ophSig* holo = new ophSig();
 
 		float depth = 0;
 
+		//read parameter
 		if (!holo->readConfig("config/holoParam.xml")) {
 			// no file 
 			return false;
 		}
 
+		//hologram data load
 		if (!holo->load("source/SF/3_point_re.bmp", "source/SF/3_point_im.bmp", 8)) {
 			// no file 
 			return false;
 		}
 
+		//get parameter using sharpness function
 		depth = holo->sigGetParamSF(10, -10, 100, 0.3);
 		std::cout << depth << endl;
+
 		// backpropagation
 		holo->propagationHolo(depth);
 
+		//save hologram data for bmp file
 		holo->save("result/SF/SF_re.bmp", "result/SF/SF_im.bmp", 8);
+
+		//release
 		holo->release();
 	}
 #endif
