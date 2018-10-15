@@ -15,12 +15,12 @@
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				true			// WRP
+#define WRP				false			// WRP
 
 #define ENCODE			false			// Encode
 
 #define WAVE_ABERR		false			// Wave Aberration
-#define CAS_PROPA		false			// Cascaded Propagation
+#define CAS_PROPA		true			// Cascaded Propagation
 
 #define OFF_AXIS		false			// Convert Off-axis
 #define CONV_CAC		false			// Convert CAC
@@ -198,9 +198,11 @@ int main()
 #endif
 #if CAS_PROPA & true
 	{
-		ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");
-		if (pCp->propagate())
-			pCp->saveIntensityAsImg(L"result/CascadedPropagation/intensityRGB.bmp", pCp->getNumColors() * 8);
+		ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");	// ophCascadedPropagation instance generation and parameter setup
+		if (pCp->isReadyToPropagate()																			// check if all the input are ready
+			&& pCp->propagateSlmToPupil()																		// 1st propagation: from SLM to pupil
+			&& pCp->propagatePupilToRetina())																	// 2nd propagation: from pupil to retina
+			pCp->save(L"result/CascadedPropagation/intensityRGB.bmp", pCp->getNumColors() * 8);					// save numerical reconstruction result in BMP format
 
 		pCp->release();
 	}
