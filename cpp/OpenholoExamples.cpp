@@ -367,14 +367,14 @@ int main()
 
 		ophSig *holo = new ophSig();
 
-		const char *f0 = "source/PhaseShiftedHolograms/0930_005_gray.bmp";
+		const char *f0 = "source/PhaseShiftedHolograms/0930_005_gray.bmp";		// File names of interference patterns with 90 degree reference wave phase shifts
 		const char *f90 = "source/PhaseShiftedHolograms/0930_006_gray.bmp";
 		const char *f180 = "source/PhaseShiftedHolograms/0930_007_gray.bmp";
 		const char *f270 = "source/PhaseShiftedHolograms/0930_008_gray.bmp";
 
-		holo->getComplexHFromPSDH(f0, f90, f180, f270);
+		holo->getComplexHFromPSDH(f0, f90, f180, f270);							// Extract complex field from 4 interference patterns
 
-		holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp", 8);
+		holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp", 8); // Save complex field to image files (real and imaginary parts)
 		holo->release();
 	}
 #endif
@@ -384,13 +384,14 @@ int main()
 
 		ophSigPU *holo = new ophSigPU;
 
+		// Load original wrapped phase data
 		if (!holo->loadPhaseOriginal("source/PhaseUnwrapping/phase_unwrapping_example.bmp", 8)) {
 			return false;
 		}
 		int maxBoxRadius = 4;
-		holo->setPUparam(maxBoxRadius);
+		holo->setPUparam(maxBoxRadius);		// Set phase unwrapping algorithm parameter (maximum box radius for Goldstein phase unwrapping)
 
-		// Do compressed Hologram algorithm
+		// Do phase unwrapping algorithm
 		holo->runPU();
 
 		// Save results
@@ -404,6 +405,7 @@ int main()
 
 		ophSigCH *holo = new ophSigCH;
 
+		// Load configure file (xml)
 		if (!holo->readConfig("config/TestSpecCH.xml")) {
 			return false;
 		}
@@ -415,7 +417,7 @@ int main()
 		// Do compressed Hologram algorithm
 		holo->runCH(0);
 
-		// Save results
+		// Save results (numerical reconstructions) to image files
 		holo->saveNumRec("result/CompressiveHolo/CH_Test.bmp");
 		holo->release();
 	}
