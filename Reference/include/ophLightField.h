@@ -58,6 +58,30 @@ using namespace oph;
 //@{
 * @detail
 
+* @section Introduction
+
+Light field based CGH generates the complex field from the light field.
+
+![](@ref pics/ophgen/lightfield/LF_1.png)
+
+Light field images are the projection images of 3D object from different view points.
+
+![(@ref pics/ophgen/lightfield/LF_2.png)
+
+The algorithm gives random phase distribution to each pixel in each projection image.
+Light-ray information of each pixel is conversed to the wavefront in ray-sampling(RS) plane using fourier transform of phase distributed amplitude.
+
+![](@ref pics/ophgen/lightfield/LF_3.png)
+
+Hologram complex field is obtained after wave propataion from RS planes to CGH plane.
+
+![](@ref pics/ophgen/lightfield/LF_4.png)
+
+
+* @section Reference
+
+K. Wakunamii, and M. Yamaguchi, "Calculation for computer generated hologram using ray-sampling plane," Optics Express, vol. 19, no. 10, pp. 9086-9101, 2011.
+
 */
 //! @} lightfield
 
@@ -72,7 +96,7 @@ public:
 	/**
 	* @brief Constructor
 	*/
-	explicit ophLF(void) {}
+	explicit ophLF(void);
 
 protected:
 	/**
