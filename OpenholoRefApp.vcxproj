@@ -13,9 +13,6 @@
   <ItemGroup>
     <ClCompile Include="cpp\OpenholoExamples.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="config\TestSpecLF.xml" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23641D63-E44A-4425-804B-891108E134A4}</ProjectGuid>
     <RootNamespace>OpenholoRefApp</RootNamespace>
