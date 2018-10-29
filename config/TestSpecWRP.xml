@@ -2,10 +2,10 @@
   <ScalingXofPointCloud>0.05</ScalingXofPointCloud>
   <ScalingYofPointCloud>0.05</ScalingYofPointCloud>
   <ScalingZofPointCloud>0.05</ScalingZofPointCloud>
-  <SLMpixelPitchX>0.000008</SLMpixelPitchX>
+  <SLMpixelPitchX>0.0000039</SLMpixelPitchX>
   <SLMpixelPitchY>0.0000039</SLMpixelPitchY>
-  <SLMpixelNumX>1920</SLMpixelNumX>
-  <SLMpixelNumY>1080</SLMpixelNumY>
+  <SLMpixelNumX>1000</SLMpixelNumX>
+  <SLMpixelNumY>1000</SLMpixelNumY>
    <Wavelength>0.000000532</Wavelength>
   <NumberOfWRP>1</NumberOfWRP>
   <LocationOfWRP>0.5e-3</LocationOfWRP>
