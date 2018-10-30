@@ -11,25 +11,25 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		true			// Point Cloud
-#define DEPTH_MAP		true			// Depth Map
-#define LIGHT_FIELD		true			// Light Field
-#define TRI_MESH		true			// Triangle Mesh
-#define WRP				true			// WRP
+#define POINT_CLOUD		false			// Point Cloud
+#define DEPTH_MAP		false			// Depth Map
+#define LIGHT_FIELD		false			// Light Field
+#define TRI_MESH		false			// Triangle Mesh
+#define WRP				false			// WRP
 
-#define ENCODE			true			// Encode
+#define ENCODE			false			// Encode
 
-#define WAVE_ABERR		true			// Wave Aberration
-#define CAS_PROPA		true			// Cascaded Propagation
+#define WAVE_ABERR		false			// Wave Aberration
+#define CAS_PROPA		false			// Cascaded Propagation
 
-#define OFF_AXIS		true			// Convert Off-axis
-#define CONV_CAC		true			// Convert CAC
-#define CONV_HPO		true			// Convert HPO
-#define GET_AT			true			// Get Parameter AT
-#define GET_SF			true			// Get Parameter SF
-#define SIG_PSDH		true			// Signal Phase Shift
-#define SIG_PU			true			// Signal Phase Unwrapping
-#define SIG_CH			true			// Signal Compressive Holography
+#define OFF_AXIS		false			// Convert Off-axis
+#define CONV_CAC		false			// Convert CAC
+#define CONV_HPO		false			// Convert HPO
+#define GET_AT			false			// Get Parameter AT
+#define GET_SF			false			// Get Parameter SF
+#define SIG_PSDH		false			// Signal Phase Shift
+#define SIG_PU			false			// Signal Phase Unwrapping
+#define SIG_CH			false			// Signal Compressive Holography
 
 int main()
 {
@@ -213,24 +213,24 @@ int main()
 
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
-
+	
 	//read parameter
-	if (!holo->readConfig("config/holoParam.xml")) {
+	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
 		return false;
 	}
-
+	
 	//hologram data load
-	if (!holo->load("source/OffAxis/3_point_re.bmp", "source/OffAxis/3_point_im.bmp", 8)) {
+	if (!holo->load("source/OffAxis/3_point_re.bmp", "source/OffAxis/3_point_im.bmp")) {
 		// no file 
 		return false;
 	}
-
+	
 	//run Convert Offaxis function
 	holo->sigConvertOffaxis();
 
 	//save hologram data for bmp file
-	holo->save("result/OffAxis/Off_axis.bmp", 8);
+	holo->save("result/OffAxis/Off_axis.bin");
 
 	//release
 	holo->release();
@@ -243,23 +243,29 @@ int main()
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
 
+	double red = 633.;
+	double green = 532.;
+	double blue = 473.;
+	double unit = 0.000000001;
+	
+
 	//read parameter
-	if (!holo->readConfig("config/holoParam.xml")) {
+	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
 		return false;
 	}
 
 	//hologram data load
-	if (!holo->load("source/CAC/ColorPoint_re.bmp", "source/CAC/ColorPoint_im.bmp", 24)) {
+	if (!holo->load("source/CAC/ColorPoint_re.bmp", "source/CAC/ColorPoint_im.bmp")) {
 		// no file 
 		return false;
 	}
 		
 	//run convert chromatic aberration compensation
-	holo->sigConvertCAC(0.000000633, 0.000000532, 0.000000473);
-
+	holo->sigConvertCAC(red * unit, green * unit, blue * unit);
+		
 	//save hologram data for bmp file
-	holo->save("result/CAC/CAC_re_C.bin", "result/CAC/CAC_im_C.bin", 24);
+	holo->save("result/CAC/CAC_re.bin", "result/CAC/CAC_im.bin");
 
 	//release
 	holo->release();
@@ -273,13 +279,13 @@ int main()
 	ophSig *holo = new ophSig();
 
 	//read parameter
-	if (!holo->readConfig("config/holoParam.xml")) {
+	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
 		return false;
 	}
 
 	//hologram data load
-	if (!holo->load("source/HPO/3_point_re.bmp", "source/HPO/3_point_im.bmp", 8)) {
+	if (!holo->load("source/HPO/3_point_re.bmp", "source/HPO/3_point_im.bmp")) {
 		// no file 
 		return false;
 	}
@@ -288,7 +294,7 @@ int main()
 	holo->sigConvertHPO();
 
 	//save hologram data for bmp file
-	holo->save("result/HPO/HPO_re.bmp", "result/HPO/HPO_im.bmp", 8);
+	holo->save("result/HPO/HPO_re.bin", "result/HPO/HPO_im.bin");
 
 	//release
 	holo->release();
@@ -296,33 +302,33 @@ int main()
 #endif
 #if GET_AT & true
 {
-std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
+	std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
-ophSig* holo = new ophSig();
+	ophSig* holo = new ophSig();
 
-float depth = 0;
+	float depth = 0;
 
-if (!holo->readConfig("config/holoParam.xml")) {
-	// no file 
-	return false;
-}
+	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
+		// no file 
+		return false;
+	}
 
-//hologram data load
-if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp", 8)) {
-	// no file 
-	return false;
-}
+	//hologram data load
+	if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp")) {
+		// no file 
+		return false;
+	}
 
-//get parameter using axis transformation
-depth = holo->sigGetParamAT();
+	//get parameter using axis transformation
+	depth = holo->sigGetParamAT();
 
-std::cout << depth << endl;
+	std::cout << depth << endl;
 
-// backpropagation
-holo->propagationHolo(-depth);
+	// backpropagation
+	holo->propagationHolo(-depth);
 
-//save hologram data for bmp file
-holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
+	//save hologram data for bmp file
+	holo->save("result/AT/AT_re.bin", "result/AT/AT_im.bin");
 
 	//release
 	holo->release();
@@ -338,13 +344,13 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 	float depth = 0;
 
 	//read parameter
-	if (!holo->readConfig("config/holoParam.xml")) {
+	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
 		return false;
 	}
 
 	//hologram data load
-	if (!holo->load("source/SF/3_point_re.bmp", "source/SF/3_point_im.bmp", 8)) {
+	if (!holo->load("source/SF/3_point_re.bmp", "source/SF/3_point_im.bmp")) {
 		// no file 
 		return false;
 	}
@@ -354,10 +360,10 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 	std::cout << depth << endl;
 
 	// backpropagation
-	holo->propagationHolo(depth);
+	holo->propagationHolo(-depth);
 
 	//save hologram data for bmp file
-	holo->save("result/SF/SF_re.bmp", "result/SF/SF_im.bmp", 8);
+	holo->save("result/SF/SF_re.bin", "result/SF/SF_im.bin");
 
 	//release
 	holo->release();
@@ -424,8 +430,6 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 	holo->release();
 }
 #endif
-
-
 
 return 0;
 }
