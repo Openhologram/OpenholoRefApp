@@ -12,24 +12,24 @@
 #include "ophSigCH.h"
 
 #define POINT_CLOUD		true			// Point Cloud
-#define DEPTH_MAP		true			// Depth Map
-#define LIGHT_FIELD		true			// Light Field
-#define TRI_MESH		true			// Triangle Mesh
-#define WRP				true			// WRP
-
-#define ENCODE			true			// Encode
-
-#define WAVE_ABERR		true			// Wave Aberration
-#define CAS_PROPA		true			// Cascaded Propagation
-
-#define OFF_AXIS		true			// Convert Off-axis
-#define CONV_CAC		true			// Convert CAC
-#define CONV_HPO		true			// Convert HPO
-#define GET_AT			true			// Get Parameter AT
-#define GET_SF			true			// Get Parameter SF
-#define SIG_PSDH		true			// Signal Phase Shift
-#define SIG_PU			true			// Signal Phase Unwrapping
-#define SIG_CH			true			// Signal Compressive Holography
+#define DEPTH_MAP		false			// Depth Map
+#define LIGHT_FIELD		false			// Light Field
+#define TRI_MESH		false			// Triangle Mesh
+#define WRP				false			// WRP
+						
+#define ENCODE			false			// Encode
+						
+#define WAVE_ABERR		false			// Wave Aberration
+#define CAS_PROPA		false			// Cascaded Propagation
+						
+#define OFF_AXIS		false			// Convert Off-axis
+#define CONV_CAC		false			// Convert CAC
+#define CONV_HPO		false			// Convert HPO
+#define GET_AT			false			// Get Parameter AT
+#define GET_SF			false			// Get Parameter SF
+#define SIG_PSDH		false			// Signal Phase Shift
+#define SIG_PU			false			// Signal Phase Unwrapping
+#define SIG_CH			false			// Signal Compressive Holography
 
 int main()
 {
@@ -45,7 +45,7 @@ int main()
 	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
 	Hologram->generateHologram(PC_DIFF_RS);										// CGH by R-S Diffract
-	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
+	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane.ohc");	// Save Hologram Complex Field by *.OHC
 
 	Hologram->encodeHologram();													// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
@@ -81,6 +81,7 @@ int main()
 	Hologram->encodeHologram();													// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp");				// Save to bmp
+	Hologram->saveAsOhc("result/DepthMap/DepthMap");
 
 	Hologram->release();														// Release memory used to Generate Depth Map
 }
@@ -98,7 +99,7 @@ int main()
 	Hologram->generateHologram();												// Generate the hologram
 
 	// Save as Complex field data
-	Hologram->saveAsOhc("result/LightField/LF_complexField.ohc");				// Save the hologram complex field data
+	Hologram->saveAsOhc("result/LightField/LF_complexField");				// Save the hologram complex field data
 
 	// Encode
 	Hologram->encoding(Hologram->ENCODE_SIMPLENI);								// Encode the hologram
@@ -192,6 +193,8 @@ int main()
 	wa->resolutionX;                           // resolution in x axis of 2D complex data array of wave aberration
 	wa->resolutionY;                           // resolution in y axis of 2D complex data array of wave aberration
 
+	wa->saveAsOhc("result/WaveAberration/aberration");
+
 
 	wa->release();
 }
@@ -203,6 +206,8 @@ int main()
 		&& pCp->propagateSlmToPupil()																		// 1st propagation: from SLM to pupil
 		&& pCp->propagatePupilToRetina())																	// 2nd propagation: from pupil to retina
 		pCp->save(L"result/CascadedPropagation/intensityRGB.bmp", pCp->getNumColors() * 8);					// save numerical reconstruction result in BMP format
+
+	pCp->saveAsOhc("result/CascadedPropagation/intensityRGB");
 
 	pCp->release();
 }
@@ -231,6 +236,7 @@ int main()
 
 	//save hologram data for bmp file
 	holo->save("result/OffAxis/Off_axis.bmp", 8);
+	holo->saveAsOhc("result/OffAxis/Off_axis");
 
 	//release
 	holo->release();
@@ -259,7 +265,8 @@ int main()
 	holo->sigConvertCAC(0.000000633, 0.000000532, 0.000000473);
 
 	//save hologram data for bmp file
-	holo->save("result/CAC/CAC_re_C.bin", "result/CAC/CAC_im_C.bin", 24);
+	holo->save("result/CAC/CAC_re_C.bmp", "result/CAC/CAC_im_C.bmp", 24);
+	holo->saveAsOhc("result/CAC/CAC");
 
 	//release
 	holo->release();
@@ -289,6 +296,7 @@ int main()
 
 	//save hologram data for bmp file
 	holo->save("result/HPO/HPO_re.bmp", "result/HPO/HPO_im.bmp", 8);
+	holo->saveAsOhc("result/HPO/HPO");
 
 	//release
 	holo->release();
@@ -296,33 +304,34 @@ int main()
 #endif
 #if GET_AT & true
 {
-std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
+	std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
-ophSig* holo = new ophSig();
+	ophSig* holo = new ophSig();
 
-float depth = 0;
+	float depth = 0;
 
-if (!holo->readConfig("config/holoParam.xml")) {
+	if (!holo->readConfig("config/holoParam.xml")) {
 	// no file 
 	return false;
-}
+	}
 
-//hologram data load
-if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp", 8)) {
+	//hologram data load
+	if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp", 8)) {
 	// no file 
 	return false;
-}
+	}
 
-//get parameter using axis transformation
-depth = holo->sigGetParamAT();
+	//get parameter using axis transformation
+	depth = holo->sigGetParamAT();
 
-std::cout << depth << endl;
+	std::cout << depth << endl;
 
-// backpropagation
-holo->propagationHolo(-depth);
+	// backpropagation
+	holo->propagationHolo(-depth);
 
-//save hologram data for bmp file
-holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
+	//save hologram data for bmp file
+	holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
+	holo->saveAsOhc("result/AT/AT");
 
 	//release
 	holo->release();
@@ -358,6 +367,7 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 
 	//save hologram data for bmp file
 	holo->save("result/SF/SF_re.bmp", "result/SF/SF_im.bmp", 8);
+	holo->saveAsOhc("result/SF/SF");
 
 	//release
 	holo->release();
@@ -377,6 +387,7 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 	holo->getComplexHFromPSDH(f0, f90, f180, f270);							// Extract complex field from 4 interference patterns
 
 	holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp", 8); // Save complex field to image files (real and imaginary parts)
+	holo->saveAsOhc("result/PhaseShift/PSDH");
 	holo->release();
 }
 #endif
@@ -398,6 +409,7 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 
 	// Save results
 	holo->savePhaseUnwrapped("result/PhaseUnwrapping/PU_Test.bmp");
+	holo->saveAsOhc("result/PhaseUnwrapping/PU");
 	holo->release();
 }
 #endif
@@ -421,6 +433,7 @@ holo->save("result/AT/AT_re.bmp", "result/AT/AT_im.bmp", 8);
 
 	// Save results (numerical reconstructions) to image files
 	holo->saveNumRec("result/CompressiveHolo/CH_Test.bmp");
+	holo->saveAsOhc("result/CompressiveHolo/CH");
 	holo->release();
 }
 #endif

@@ -341,3 +341,4 @@ Reference/include/ophDis.h
 Reference/lib/ophdis.lib
 Reference/dll/openholo.dll
 /Reference/include/comment.h
+*.ohc

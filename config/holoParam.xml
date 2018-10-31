@@ -3,7 +3,9 @@
   <cols>1024</cols>
   <width>0.01</width>
   <height>0.01</height>
-  <wavelength>0.000000532</wavelength>
+  <bluewavelength>0.000000532</bluewavelength>
+  <greenwavelength>0.000000532</greenwavelength>
+  <redwavelength>0.000000532</redwavelength>
   <NA>0.5</NA>
   <z>-0.1</z>
   <angle_X>0</angle_X>
