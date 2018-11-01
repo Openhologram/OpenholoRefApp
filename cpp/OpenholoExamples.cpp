@@ -22,7 +22,7 @@
 #define WAVE_ABERR		false			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
-#define OFF_AXIS		true			// Convert Off-axis
+#define OFF_AXIS		false			// Convert Off-axis
 #define CONV_CAC		false			// Convert CAC
 #define CONV_HPO		false			// Convert HPO
 #define GET_AT			false			// Get Parameter AT
@@ -213,25 +213,24 @@ int main()
 
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
-	
+
 	//read parameter
 	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
 		return false;
 	}
-	
+
 	//hologram data load
-	if (!holo->load("source/OffAxis/3_point_re.bmp", "source/OffAxis/3_point_im.bmp")) {
+	if (holo->loadAsOhc("source/OffAxis/3_point.ohc") < 1) {
 		// no file 
 		return false;
 	}
-	
+
 	//run Convert Offaxis function
 	holo->sigConvertOffaxis();
 
-	//save hologram data
-	holo->save("result/OffAxis/Off_axis.bin");
-	holo->saveAsOhc("result/OffAxis/Off_axis");
+	//save hologram data for ohc file 
+	holo->saveAsOhc("result/OffAxis/Off_axis.ohc");
 
 	//release
 	holo->release();
@@ -248,7 +247,7 @@ int main()
 	double green = 532.;
 	double blue = 473.;
 	double unit = 0.000000001;
-	
+
 
 	//read parameter
 	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
@@ -257,19 +256,20 @@ int main()
 	}
 
 	//hologram data load
-	if (!holo->load("source/CAC/ColorPoint_re.bmp", "source/CAC/ColorPoint_im.bmp")) {
+	if (holo->loadAsOhc("source/CAC/ColorPoint.ohc") < 1) {
 		// no file 
 		return false;
 	}
-		
+
 	//run convert chromatic aberration compensation
 	holo->sigConvertCAC(red * unit, green * unit, blue * unit);
-		
-	//save hologram data for bmp file
-	holo->save("result/CAC/CAC_re.bin", "result/CAC/CAC_im.bin");
+
+	//save hologram data for ohc file
+	holo->saveAsOhc("result/CAC/CAC.ohc");
 
 	//release
 	holo->release();
+
 }
 #endif
 #if CONV_HPO & true
@@ -286,7 +286,7 @@ int main()
 	}
 
 	//hologram data load
-	if (!holo->load("source/HPO/3_point_re.bmp", "source/HPO/3_point_im.bmp")) {
+	if (holo->loadAsOhc("source/HPO/3_point.ohc") < 1) {
 		// no file 
 		return false;
 	}
@@ -294,11 +294,12 @@ int main()
 	//run convert horizontal parallax only hologram
 	holo->sigConvertHPO();
 
-	//save hologram data for bmp file
-	holo->save("result/HPO/HPO_re.bin", "result/HPO/HPO_im.bin");
+	//save hologram data for ohc file
+	holo->saveAsOhc("result/HPO/HPO.ohc");
 
 	//release
 	holo->release();
+
 }
 #endif
 #if GET_AT & true
@@ -315,7 +316,7 @@ int main()
 	}
 
 	//hologram data load
-	if (!holo->load("source/AT/0.1point_re.bmp", "source/AT/0.1point_im.bmp")) {
+	if (holo->loadAsOhc("source/AT/point_100mm.ohc") < 1) {
 		// no file 
 		return false;
 	}
@@ -328,8 +329,8 @@ int main()
 	// backpropagation
 	holo->propagationHolo(-depth);
 
-	//save hologram data for bmp file
-	holo->save("result/AT/AT_re.bin", "result/AT/AT_im.bin");
+	//save hologram data for ohc file	
+	holo->saveAsOhc("result/AT/AT.ohc");
 
 	//release
 	holo->release();
@@ -351,7 +352,7 @@ int main()
 	}
 
 	//hologram data load
-	if (!holo->load("source/SF/3_point_re.bmp", "source/SF/3_point_im.bmp")) {
+	if (holo->loadAsOhc("source/SF/3_point.ohc") < 1) {	
 		// no file 
 		return false;
 	}
@@ -363,11 +364,12 @@ int main()
 	// backpropagation
 	holo->propagationHolo(-depth);
 
-	//save hologram data for bmp file
-	holo->save("result/SF/SF_re.bin", "result/SF/SF_im.bin");
+	//save hologram data for ohc file
+	holo->saveAsOhc("result/SF/SF.ohc");
 
 	//release
 	holo->release();
+
 }
 #endif
 #if SIG_PSDH & true

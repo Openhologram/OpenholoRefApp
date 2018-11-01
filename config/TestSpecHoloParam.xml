@@ -4,7 +4,7 @@
   <width>0.01</width>
   <height>0.01</height>
   <wavelength>0.000000532</wavelength>
-  <colorType>0</colorType>
+  <wavelength_num>1</wavelength_num>
   <NA>0.5</NA>
   <z>-0.1</z>
   <angle_X>0</angle_X>
