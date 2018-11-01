@@ -22,7 +22,7 @@
 #define WAVE_ABERR		false			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
-#define OFF_AXIS		false			// Convert Off-axis
+#define OFF_AXIS		true			// Convert Off-axis
 #define CONV_CAC		false			// Convert CAC
 #define CONV_HPO		false			// Convert HPO
 #define GET_AT			false			// Get Parameter AT
@@ -229,8 +229,9 @@ int main()
 	//run Convert Offaxis function
 	holo->sigConvertOffaxis();
 
-	//save hologram data for bmp file
+	//save hologram data
 	holo->save("result/OffAxis/Off_axis.bin");
+	holo->saveAsOhc("result/OffAxis/Off_axis");
 
 	//release
 	holo->release();
