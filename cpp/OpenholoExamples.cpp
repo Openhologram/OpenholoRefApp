@@ -11,15 +11,15 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		true			// Point Cloud
-#define DEPTH_MAP		true			// Depth Map
+#define POINT_CLOUD		false			// Point Cloud
+#define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
 #define WRP				false			// WRP
 
 #define ENCODE			false			// Encode
 
-#define WAVE_ABERR		false			// Wave Aberration
+#define WAVE_ABERR		true			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
 #define OFF_AXIS		false			// Convert Off-axis
@@ -182,10 +182,10 @@ int main()
 
 	wa->readConfig("config/TestSpecAberration.xml");  // reads parameters from a configuration file
 	wa->accumulateZernikePolynomial();         // generates 2D complex data array of wave aberration according to parameters   
-	wa->complex_W;                            // double pointer variable of 2D complex data array of wave aberration
+	wa->complex_W;							// double pointer variable of 2D complex data array of wave aberration
 	wa->resolutionX;                           // resolution in x axis of 2D complex data array of wave aberration
 	wa->resolutionY;                           // resolution in y axis of 2D complex data array of wave aberration
-	wa->saveAberration("result/WaveAberration/aberration.bin");      // saves 2D complex data array of complex wave aberration into a file
+	wa->saveAsOhc("result/WaveAberration/aberration.ohc");      // saves 2D complex data array of complex wave aberration into a file
 
 	wa->readAberration("result/WaveAberration/aberration.bin");      // reads 2D complex data array of complex wave aberration from a file
 	wa->complex_W;                            // double pointer variable of 2D complex data array of wave aberration

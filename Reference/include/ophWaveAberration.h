@@ -189,6 +189,7 @@ public:
 	* @param fname: a path name of a file to save a wave aberration 
 	*/
 	void saveAberration(const char* fname);
+	virtual int saveAsOhc(const char* fname);
 	/**
 	* @brief reads the 2D data array of a wave aberration from a file
 	* @param fname: a path name of a file to save a wave aberration
