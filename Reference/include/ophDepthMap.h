@@ -71,27 +71,27 @@ I. Depth Map Hologram Generation
 -   Implemented on CPU and GPU.
 -   The original algorithm is modified in the way that can be easily implemented in parallel.
 
-![](@ref pics/ophgen/depthmap/gen_depthmap01.png)
+![](pics/ophgen/depthmap/gen_depthmap01.png)
 
-![](@ref pics/ophgen/depthmap/depth_slice_image01.png)
+![](pics/ophgen/depthmap/depth_slice_image01.png)
 
 II. Algorithm
 
 -   Propagate from the previous depth plane to the current depth plane.
 -   At the last plane, back propagate to the hologram plane.
 
-![](@ref pics/ophgen/depthmap/gen_depthmap_flowchart02.png)
+![](pics/ophgen/depthmap/gen_depthmap_flowchart02.png)
 
-![](@ref pics/ophgen/depthmap/depth_slice_image02.png)
+![](pics/ophgen/depthmap/depth_slice_image02.png)
 
 III. Modified Algorithm
 
 -   Back propagate each depth plane to the hologram plane.
 -   Accumulate the results of each propagation.
 
-![](@ref pics/ophgen/depthmap/gen_depthmap_flowchart03.png)
+![](pics/ophgen/depthmap/gen_depthmap_flowchart03.png)
 
-![](@ref pics/ophgen/depthmap/depth_slice_image03.png)
+![](pics/ophgen/depthmap/depth_slice_image03.png)
 
 
 */
@@ -135,12 +135,13 @@ public:
 	inline Real getFarDepth(void) { return dm_config_.far_depthmap; }
 	inline uint getNumOfDepth(void) { return dm_config_.num_of_depth; }
 	inline void getRenderDepth(std::vector<int>& renderdepth) { renderdepth = dm_config_.render_depth; }
-	inline const OphDepthMapConfig& getConfig(void) { return dm_config_; }
+
+	inline const OphDepthMapConfig& getConfig() { return dm_config_; }
 	
 private:
 
 	void initialize();
-	void initCPU();   
+	void initCPU();
 	void initGPU();
 
 	bool prepareInputdataCPU(uchar* img, uchar* dimg);

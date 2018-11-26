@@ -70,18 +70,20 @@ struct geometric {
 Triangular mesh based CGH generates the complex field of 3D objects represented as a collection of the triangular meshes.
 The algorithm aggregates the angular spectrums of individual triangular meshes and then performs a Fourier transform to obtain the complex field for entire objects.
 
-![](@ref pics/ophgen/mesh/mesh_fig3.png)
+![](pics/ophgen/mesh/mesh_fig3.png)
 
 The angular spectrum of the individual triangular mesh is obtained using the analytic formula of the Fourier transform of the reference triangular aperture, considering the geometrical relation between the hologram plane and the local mesh plane, and also between the local mesh and the reference triangular aperture.
 
-![](@ref pics/ophgen/mesh/mesh_fig1.png)
-![](@ref pics/ophgen/mesh/mesh_fig2.png)
+![](pics/ophgen/mesh/mesh_fig1.png)
+![](pics/ophgen/mesh/mesh_fig2.png)
 
 The phase distribution on the mesh is determined by the carrier wave is assumed to be a plane wave of a specfic direction in the code.
 The amplitude inside each mesh is determined by the surface shading model and it can be either linearly varying for the continuous shading or uniform for the flat shading.
 
-![continuous shading](@ref pics/ophgen/mesh/mesh_ex_continuous.png)
-![flat shading](@ref pics/ophgen/mesh/mesh_ex_flat.png)
+![continuous shading](pics/ophgen/mesh/mesh_ex_continuous.png)
+	-Fig.continuous shading
+![flat shading](pics/ophgen/mesh/mesh_ex_flat.png)
+	-Fig.flat shading
 
 */
 //! @} mesh
@@ -129,12 +131,12 @@ private:
 public:
 	void setObjSize(Real in) { objSize = in; }
 	void setObjShift(vec3 in) { objShift[_X] = in[_X]; objShift[_Y] = in[_Y]; objShift[_Z] = in[_Z]; }
-	void setObjShift(Real in[]) { objShift[_X] = in[_X]; objShift[_Y] = in[_Y]; objShift[_Z] = in[_Z]; }
 	void setObjShift(vector<Real> in) { objShift[_X] = in[_X]; objShift[_Y] = in[_Y]; objShift[_Z] = in[_Z]; }
 	void setCarrierWave(Real in1, Real in2, Real in3) { carrierWave[_X] = in1; carrierWave[_Y] = in2; carrierWave[_Z] = in3; }
 	void setIllumination(vec3 in) { illumination = in; }
 	void setIllumination(Real inx, Real iny, Real inz) { illumination = { inx, iny, inz }; }
 	void setShadingType(int in) { SHADING_TYPE = in; }
+
 	ulonglong getNumMesh() { return meshData->n_faces; }
 	Real* getMeshData() { return triMeshArray; }
 	Complex<Real>* getAngularSpectrum() { return angularSpectrum; }
@@ -143,8 +145,6 @@ public:
 	const Real& getObjSize(void) { return objSize; }
 	const vec3& getObjShift(void) { return objShift; }
 	const vec3&	getIllumination(void) { return illumination; }
-
-
 public:
 	/**
 	* @brief	Triangular mesh basc CGH configuration file load
@@ -176,7 +176,7 @@ public:
 	*/
 	void objScaleShift();
 	void objScaleShift(Real objSize_, vector<Real> objShift_);
-	void objScaleShift(Real objSize_, Real objShift_[]);
+	void objScaleShift(Real objSize_, vec3 objShift_);
 
 	enum SHADING_FLAG { SHADING_FLAT, SHADING_CONTINUOUS };
 
@@ -194,6 +194,8 @@ public:
 	* @param	Real	carryingAngleY		Wave carrying angle in vertical direction
 	*/
 	void waveCarry(Real carryingAngleX, Real carryingAngleY);
+
+	//virtual int saveAsOhc(const char* fname);
 
 private:
 	

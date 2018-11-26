@@ -11,8 +11,8 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		false			// Point Cloud
-#define DEPTH_MAP		false			// Depth Map
+#define POINT_CLOUD		true			// Point Cloud
+#define DEPTH_MAP		true			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
 #define WRP				false			// WRP
@@ -47,10 +47,10 @@ int main()
 	Hologram->generateHologram(PC_DIFF_RS);										// CGH by R-S Diffract
 	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
 
-	Hologram->encodeHologram();													// Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_SSB);										// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
-	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane.bmp");		// Save to bmp
+	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane_SIMPLENI.bmp");		// Save to bmp
 
 	//Hologram->loadAsOhc("result/PointCloud/Result_PointCloudSample_Plane");	// Load Complex Field by *.OHC
 
@@ -78,7 +78,7 @@ int main()
 	Hologram->readImageDepth("source/DepthMap", "RGB_D", "D_D");				// Read depth image & rgb image
 
 	Hologram->generateHologram();												// CGH by depth map
-	Hologram->encodeHologram();													// Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_SSB);										// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp");				// Save to bmp
 
@@ -221,7 +221,7 @@ int main()
 	}
 
 	//hologram data load
-	if (holo->loadAsOhc("source/OffAxis/3_point.ohc") < 1) {
+	if (holo->loadAsOhc("source/OffAxis/3_point.ohc") < 0) {
 		// no file 
 		return false;
 	}
