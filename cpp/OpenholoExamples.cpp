@@ -243,10 +243,9 @@ int main()
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
 
-	double red = 633.;
-	double green = 532.;
-	double blue = 473.;
-	double unit = 0.000000001;
+	double red = 0.000000633;
+	double green = 0.000000532;
+	double blue = 0.000000473;
 
 
 	//read parameter
@@ -257,12 +256,13 @@ int main()
 
 	//hologram data load
 	if (holo->loadAsOhc("source/CAC/ColorPoint.ohc") < 1) {
+	//if (!holo->load("source/ColorPoint_re.bmp", "source/ColorPoint_im.bmp")) {
 		// no file 
 		return false;
 	}
 
 	//run convert chromatic aberration compensation
-	holo->sigConvertCAC(red * unit, green * unit, blue * unit);
+	holo->sigConvertCAC(red, green, blue);
 
 	//save hologram data for ohc file
 	holo->saveAsOhc("result/CAC/CAC.ohc");
@@ -316,7 +316,7 @@ int main()
 	}
 
 	//hologram data load
-	if (holo->loadAsOhc("source/AT/point_100mm.ohc") < 1) {
+	if (holo->loadAsOhc("source/AT/point_150mm.ohc") < 1) {
 		// no file 
 		return false;
 	}
