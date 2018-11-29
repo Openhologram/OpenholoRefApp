@@ -147,7 +147,7 @@ int main()
 	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
 	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorism
-	Hologram->loadPointCloud("source/WRP/WRP_K.ply");     // Load Point Cloud Data(*.PLY)
+	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                 // Load Point Cloud Data(*.PLY)
 	Hologram->autoScaling(); 
 	Hologram->calculateWRP();                                          //  WRP generation 
 	Hologram->generateHologram();                                      // CGH from WRP
