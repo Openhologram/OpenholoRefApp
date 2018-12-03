@@ -47,10 +47,10 @@ int main()
 	Hologram->generateHologram(PC_DIFF_RS);										// CGH by R-S Diffract
 	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
 
-	Hologram->encoding(ophGen::ENCODE_SSB);										// Encode Complex Field to Real Field
+	Hologram->encodeHologram();													// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
-	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane_SIMPLENI.bmp");		// Save to bmp
+	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane.bmp");		// Save to bmp
 
 	//Hologram->loadAsOhc("result/PointCloud/Result_PointCloudSample_Plane");	// Load Complex Field by *.OHC
 
@@ -78,7 +78,7 @@ int main()
 	Hologram->readImageDepth("source/DepthMap", "RGB_D", "D_D");				// Read depth image & rgb image
 
 	Hologram->generateHologram();												// CGH by depth map
-	Hologram->encoding(ophGen::ENCODE_SSB);										// Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);										// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp");				// Save to bmp
 
@@ -187,7 +187,7 @@ int main()
 	wa->resolutionY;                           // resolution in y axis of 2D complex data array of wave aberration
 	wa->saveAsOhc("result/WaveAberration/aberration.ohc");      // saves 2D complex data array of complex wave aberration into a file
 
-	wa->readAberration("result/WaveAberration/aberration.bin");      // reads 2D complex data array of complex wave aberration from a file
+	wa->loadAsOhc("result/WaveAberration/aberration.ohc");      // reads 2D complex data array of complex wave aberration from a file
 	wa->complex_W;                            // double pointer variable of 2D complex data array of wave aberration
 	wa->resolutionX;                           // resolution in x axis of 2D complex data array of wave aberration
 	wa->resolutionY;                           // resolution in y axis of 2D complex data array of wave aberration
