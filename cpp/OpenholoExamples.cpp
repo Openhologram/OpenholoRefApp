@@ -15,11 +15,11 @@
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				false			// WRP
+#define WRP				true			// WRP
 
 #define ENCODE			false			// Encode
 
-#define WAVE_ABERR		true			// Wave Aberration
+#define WAVE_ABERR		false			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
 #define OFF_AXIS		false			// Convert Off-axis
@@ -147,14 +147,13 @@ int main()
 	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
 	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorism
-	Hologram->loadPointCloud("source/WRP/TestPointCloud_WRP.ply");     // Load Point Cloud Data(*.PLY)
-
-
+	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                 // Load Point Cloud Data(*.PLY)
+	Hologram->autoScaling(); 
 	Hologram->calculateWRP();                                          //  WRP generation 
 	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->encodeHologram();                                        // Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_PHASE);                                        // Encode Complex Field to Real Field
 	Hologram->normalize();                                             //Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/WRP/Result_WRP.bmp");                       // Save to bmp
+	Hologram->save("result/WRP/Result_WRPK.bmp");                       // Save to bmp
 
 	Hologram->release();                                               // Release memory used to Generate Point Cloud 
 }
