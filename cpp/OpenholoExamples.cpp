@@ -146,14 +146,15 @@ int main()
 
 	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
-	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorism
-	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                 // Load Point Cloud Data(*.PLY)
-	Hologram->autoScaling(); 
-	Hologram->calculateWRP();                                          //  WRP generation 
+	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorithm
+	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                  // Load Point Cloud Data(*.PLY)
+	Hologram->autoScaling(100); 
+	Hologram->calculateWRP();                                          // WRP generation 
 	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->encoding(ophGen::ENCODE_PHASE);                                        // Encode Complex Field to Real Field
-	Hologram->normalize();                                             //Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/WRP/Result_WRPK.bmp");                       // Save to bmp
+	Hologram->waveCarry(10, 0, 1);                                     // ophGen::waveCarry  
+	Hologram->encoding(ophGen::ENCODE_OFFSSB);                          // Encode Complex Field to Real Field
+	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+	Hologram->save("result/WRP/Result_offssbWRPK.bmp");                      // Save to bmp
 
 	Hologram->release();                                               // Release memory used to Generate Point Cloud 
 }
