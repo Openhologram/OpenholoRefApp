@@ -151,7 +151,7 @@ int main()
 	Hologram->autoScaling(); 
 	Hologram->calculateWRP();                                          // WRP generation 
 	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->waveCarry(0, 2.19, 0);                                     // ophGen::waveCarry  
+	Hologram->waveCarry(0, 2.19, 1);                                     // ophGen::waveCarry  
 	Hologram->encoding(ophGen::ENCODE_OFFSSB);                          // Encode Complex Field to Real Field
 	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 	Hologram->save("result/WRP/Result_offssbWRPK.bmp");                      // Save to bmp
