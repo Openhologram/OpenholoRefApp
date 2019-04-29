@@ -13,9 +13,9 @@
 
 #define POINT_CLOUD		false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
-#define LIGHT_FIELD		false			// Light Field
+#define LIGHT_FIELD		true			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				true			// WRP
+#define WRP				false			// WRP
 
 #define ENCODE			false			// Encode
 
@@ -91,7 +91,7 @@ int main()
 
 	// Load
 	Hologram->readLFConfig("config/TestSpecLF.xml");							// Read the LF hologram configuration file
-	Hologram->loadLF("source/LightField", "bmp");// Load the Light field source image files
+	Hologram->loadLF("source/LightField_5x5", "bmp");							// Load the Light field source image files
 		/// Put the directory which has the source files and Put the image file type
 
 	// Generate
@@ -147,15 +147,15 @@ int main()
 	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
 	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorism
-	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                 // Load Point Cloud Data(*.PLY)
-	Hologram->autoScaling(); 
-	Hologram->calculateWRP();                                          //  WRP generation 
+	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                  // Load Point Cloud Data(*.PLY)
+	Hologram->autoScaling();
+	Hologram->calculateWRP();                                          // WRP generation
 	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->encoding(ophGen::ENCODE_PHASE);                                        // Encode Complex Field to Real Field
-	Hologram->normalize();                                             //Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/WRP/Result_WRPK.bmp");                       // Save to bmp
+	Hologram->encoding(ophGen::ENCODE_PHASE);                          // Encode Complex Field to Real Field
+	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+	Hologram->save("result/WRP/Result_WRPK.bmp");                      // Save to bmp
 
-	Hologram->release();                                               // Release memory used to Generate Point Cloud 
+	Hologram->release();                                               // Release memory used to Generate WRP
 }
 #endif
 #if ENCODE & true
