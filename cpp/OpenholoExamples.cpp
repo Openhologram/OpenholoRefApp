@@ -11,11 +11,11 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		false			// Point Cloud
+#define POINT_CLOUD		true			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				true			// WRP
+#define WRP				false			// WRP
 
 #define ENCODE			false			// Encode
 
@@ -44,7 +44,7 @@ int main()
 
 	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-	Hologram->generateHologram(PC_DIFF_RS);										// CGH by R-S Diffract
+	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
 	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
 
 	Hologram->encodeHologram();													// Encode Complex Field to Real Field
