@@ -47,7 +47,7 @@ int main()
 	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
 	Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
 
-	Hologram->encodeHologram();													// Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);					// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
 	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane.bmp");		// Save to bmp
@@ -78,9 +78,9 @@ int main()
 	Hologram->readImageDepth("source/DepthMap", "RGB_D", "D_D");				// Read depth image & rgb image
 
 	Hologram->generateHologram();												// CGH by depth map
-	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);										// Encode Complex Field to Real Field
+	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);					// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp");				// Save to bmp
+	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp", 8);				// Save to bmp
 
 	Hologram->release();														// Release memory used to Generate Depth Map
 }
@@ -151,8 +151,8 @@ int main()
 	Hologram->autoScaling(); 
 	Hologram->calculateWRP();                                          // WRP generation 
 	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->waveCarry(0, 2.19, 1);                                     // ophGen::waveCarry  
-	Hologram->encoding(ophGen::ENCODE_OFFSSB);                          // Encode Complex Field to Real Field
+	Hologram->waveCarry(0, 0.1, 0.15);                                 // ophGen::waveCarry  
+	Hologram->encoding(ophGen::ENCODE_PHASE);                          // Encode Complex Field to Real Field
 	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 	Hologram->save("result/WRP/Result_offssbWRPK.bmp");                      // Save to bmp
 
@@ -198,11 +198,14 @@ int main()
 #endif
 #if CAS_PROPA & true
 {
-	ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation.xml");	// ophCascadedPropagation instance generation and parameter setup
+	ophCascadedPropagation* pCp = new ophCascadedPropagation(L"config/TestSpecCascadedPropagation(img).xml");	// ophCascadedPropagation instance generation and parameter setup
 	if (pCp->isReadyToPropagate()																			// check if all the input are ready
 		&& pCp->propagateSlmToPupil()																		// 1st propagation: from SLM to pupil
 		&& pCp->propagatePupilToRetina())																	// 2nd propagation: from pupil to retina
+	{
 		pCp->save(L"result/CascadedPropagation/intensityRGB.bmp", pCp->getNumColors() * 8);					// save numerical reconstruction result in BMP format
+		pCp->saveAsOhc("result/CascadedPropagation/intensityRGB_OHC.ohc");
+	}
 
 	pCp->release();
 }
@@ -385,7 +388,7 @@ int main()
 
 	holo->getComplexHFromPSDH(f0, f90, f180, f270);							// Extract complex field from 4 interference patterns
 
-	holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp", 8); // Save complex field to image files (real and imaginary parts)
+	holo->save("result/PhaseShift/PSDH_re_C.bmp", "result/PhaseShift/PSDH_im_C.bmp"); // Save complex field to image files (real and imaginary parts)
 	holo->release();
 }
 #endif
