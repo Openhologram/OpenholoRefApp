@@ -11,9 +11,9 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		true			// Point Cloud
+#define POINT_CLOUD		false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
-#define LIGHT_FIELD		false			// Light Field
+#define LIGHT_FIELD		true			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
 #define WRP				false			// WRP
 
@@ -88,6 +88,8 @@ int main()
 #if LIGHT_FIELD & true
 {
 	ophLF* Hologram = new ophLF();
+
+	Hologram->setMode(MODE_GPU);
 
 	// Load
 	Hologram->readLFConfig("config/TestSpecLF.xml");							// Read the LF hologram configuration file
