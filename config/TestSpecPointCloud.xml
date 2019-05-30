@@ -7,13 +7,6 @@
   <SLMpixelPitchY>0.0000043</SLMpixelPitchY>
   <SLMpixelNumX>1920</SLMpixelNumX>
   <SLMpixelNumY>1080</SLMpixelNumY>
-  <!--<BandpassFilterShape>circle</BandpassFilterShape>
-  <BandpassFilterWidthX>5</BandpassFilterWidthX>
-  <BandpassFilterWidthY>3</BandpassFilterWidthY>
-  <FocalLengthofInputLens>200</FocalLengthofInputLens>
-  <FocalLengthofOutputLens>200</FocalLengthofOutputLens>
-  <FocalLengthofEyepieceLens>75</FocalLengthofEyepieceLens>-->
-  <WavelengthofLaser>0.000000633</WavelengthofLaser>
-  <!--<TiltAngleX>22.5</TiltAngleX>
-  <TiltAngleY>22.5</TiltAngleY>-->
+  <WavelengthofLaser>532e-9</WavelengthofLaser>
+  <NumOfStream>0</NumOfStream>
 </TestSpecPointCloud>
