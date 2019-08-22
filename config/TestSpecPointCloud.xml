@@ -8,5 +8,5 @@
   <SLMpixelNumX>1920</SLMpixelNumX>
   <SLMpixelNumY>1080</SLMpixelNumY>
   <WavelengthofLaser>532e-9</WavelengthofLaser>
-  <NumOfStream>0</NumOfStream>
+  <NumOfStream>20</NumOfStream>
 </TestSpecPointCloud>

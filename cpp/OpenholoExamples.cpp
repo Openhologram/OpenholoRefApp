@@ -11,11 +11,11 @@
 #include "ophSigPU.h"
 #include "ophSigCH.h"
 
-#define POINT_CLOUD		true			// Point Cloud
+#define POINT_CLOUD	    false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				false			// WRP
+#define WRP				true			// WRP
 
 #define ENCODE			false			// Encode
 
@@ -89,7 +89,7 @@ int main()
 {
 	ophLF* Hologram = new ophLF();
 
-	Hologram->setMode(MODE_GPU);
+	Hologram->setMode(MODE_CPU);
 
 	// Load
 	Hologram->readLFConfig("config/TestSpecLF.xml");							// Read the LF hologram configuration file
@@ -148,6 +148,8 @@ int main()
 
 	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
 
+	Hologram->setMode(Mode_GPU);
+
 	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorithm
 	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                  // Load Point Cloud Data(*.PLY)
 	Hologram->autoScaling(); 
@@ -156,7 +158,7 @@ int main()
 	Hologram->waveCarry(0, 0.1, 0.15);                                 // ophGen::waveCarry  
 	Hologram->encoding(ophGen::ENCODE_PHASE);                          // Encode Complex Field to Real Field
 	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/WRP/Result_offssbWRPK.bmp");                      // Save to bmp
+	Hologram->save("result/WRP/Result_GPU.bmp");                      // Save to bmp
 
 	Hologram->release();                                               // Release memory used to Generate Point Cloud 
 }
