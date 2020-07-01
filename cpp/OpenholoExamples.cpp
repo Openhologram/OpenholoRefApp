@@ -1,15 +1,16 @@
-#include "ophPointCloud.h"
-#include "ophDepthMap.h"
-#include "ophLightField.h"
-#include "ophTriMesh.h"
-#include "ophWRP.h"
+#include <ophPointCloud.h>
+#include <ophDepthMap.h>
+#include <ophLightField.h>
+#include <ophTriMesh.h>
+#include <ophWRP.h>
 
-#include "ophWaveAberration.h"
-#include "ophCascadedPropagation.h"
+#include <ophWaveAberration.h>
+#include <ophCascadedPropagation.h>
 
-#include "ophSig.h"
-#include "ophSigPU.h"
-#include "ophSigCH.h"
+#include <ophSig.h>
+#include <ophSigPU.h>
+#include <ophSigCH.h>
+
 
 #define POINT_CLOUD	    false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
@@ -19,7 +20,7 @@
 
 #define ENCODE			false			// Encode
 
-#define WAVE_ABERR		false			// Wave Aberration
+#define WAVE_ABERR		true			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
 #define OFF_AXIS		false			// Convert Off-axis
@@ -31,151 +32,185 @@
 #define SIG_PU			false			// Signal Phase Unwrapping
 #define SIG_CH			false			// Signal Compressive Holography
 
+
+#define USE_RGB			true			// on/off
+
+char g_szResult[MAX_PATH] = { 0, };
+
+
+using namespace std;
+void reset(Complex<Real>*in, int nx, int ny)
+{
+	for (int i = 0; i < nx; i++)
+	{
+		for (int j = 0; j < ny; j++)
+		{
+			in[i*ny + j] = i * ny + j;
+		}
+	}
+}
+
+
 int main()
 {
-#if POINT_CLOUD & true
-{
+#if POINT_CLOUD &true
 	cout << "OpenHolo Library : Generation Hologram - Point Cloud Example" << endl;
 
 	ophPointCloud* Hologram = new ophPointCloud();
-
-	Hologram->readConfig("config/TestSpecPointCloud.xml");						// Read Config Parameters for Point Cloud CGH
-	Hologram->loadPointCloud("source/PointCloud/TestPointCloud_Plane.ply");		// Load Point Cloud Data(*.PLY)
-
 	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
-	//Hologram->saveAsOhc("result/PointCloud/Result_PointCloudSample_Plane");		// Save Hologram Complex Field by *.OHC
+#if USE_RGB & true
+	Hologram->readConfig("config/PointCloud_3ch.xml");							// Read Config Parameters for Point Cloud CGH
+	Hologram->loadPointCloud("source/PointCloud/PointCloud_Dice_RGB.ply");		// Load Point Cloud Data(*.PLY)
+#else
+	Hologram->readConfig("config/PointCloud_1ch.xml");
+	Hologram->loadPointCloud("source/PointCloud/PointCloud_Dice_Grayscale.ply");			
+#endif
 
-	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);					// Encode Complex Field to Real Field
+	int nChannel = Hologram->getContext().waveNum;
+
+	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
+	Hologram->saveAsOhc("result/PointCloud/Result_PointCloud_Dice.ohc");		// Save to ohc
+	Hologram->encoding(ophGen::ENCODE_PHASE);									// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
-	Hologram->save("result/PointCloud/Result_PointCloudSample_Plane.bmp");		// Save to bmp
-
-	//Hologram->loadAsOhc("result/PointCloud/Result_PointCloudSample_Plane");	// Load Complex Field by *.OHC
-
-	//Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
-
-	//Hologram->setOffsetDepth(0.3);											// Set Point Cloud Config Parameter - Offset Depth
-	//Hologram->setScale(0.01, 0.01, 0.01);										// Set Point Cloud Config Parameter - Scale of Model Data
-
-	//Hologram->encodeHologram();												// Encode Complex Field to Real Field
-	//Hologram->normalize();													// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-
-	//Hologram->save("result/PointCloud/Result_PointCloudSample_PlaneByOHC");	// Save to bmp
+	sprintf(g_szResult, "result/PointCloud/Result_PointCloud_Dice_%dch.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
 
 	Hologram->release();														// Release memory used to Generate Point Cloud
-}
+
 #endif
 #if DEPTH_MAP & true
-{
+
 	cout << "OpenHolo Library : Generation Hologram - Depth Map Example" << endl;
 
 	ophDepthMap* Hologram = new ophDepthMap();
 
 	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
-	Hologram->readConfig("config/TestSpecDepthMap.xml");						// Read Config Parameters for Depth Map CGH
-	Hologram->readImageDepth("source/DepthMap", "RGB_D", "D_D");				// Read depth image & rgb image
+#if USE_RGB & true
+	Hologram->readConfig("config/DepthMap_3ch.xml");							// Read Config Parameters for Depth Map CGH
+#else
+	Hologram->readConfig("config/DepthMap_1ch.xml");
+#endif
+
+	Hologram->readImageDepth("source/DepthMap", 
+		"DepthMap_Dice_RGB", "DepthMap_Dice_Depth");							// Read depth image & rgb image
+
+	int nChannel = Hologram->getContext().waveNum;
 
 	Hologram->generateHologram();												// CGH by depth map
-	Hologram->encoding(ophGen::ENCODE_SSB, ophGen::SSB_BOTTOM);					// Encode Complex Field to Real Field
-	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/DepthMap/Result_DepthmapSample.bmp", 8);				// Save to bmp
+	Hologram->saveAsOhc("result/DepthMap/DepthMap_Dice.ohc");				// Save the hologram complex field data
 
-	Hologram->release();														// Release memory used to Generate Depth Map
-}
+	Hologram->encoding(ophDepthMap::ENCODE_PHASE);								// Encode Complex Field to Real Field
+	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+
+	sprintf(g_szResult, "result/DepthMap/Result_DepthMap_Dice_%dch.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
+
+	Hologram->release();														// Release memory used to Generate Point Cloud
+		
 #endif
 #if LIGHT_FIELD & true
-{
+	cout << "OpenHolo Library : Generation Hologram - Light Field Example" << endl;
+
 	ophLF* Hologram = new ophLF();
 
-	Hologram->setMode(MODE_CPU);
+	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-	// Load
-	Hologram->readLFConfig("config/TestSpecLF.xml");							// Read the LF hologram configuration file
-	Hologram->loadLF("source/LightField", "bmp");// Load the Light field source image files
-		/// Put the directory which has the source files and Put the image file type
+#if USE_RGB & true
+	Hologram->readConfig("config/LightField_3ch.xml");							// Read the LF hologram configuration file
+#else
+	Hologram->readConfig("config/LightField_1ch.xml");
+#endif
+	
+	Hologram->loadLF("source/LightField", "bmp");								// Load the Light field source image files
 
-	// Generate
+	int nChannel = Hologram->getContext().waveNum;
+
 	Hologram->generateHologram();												// Generate the hologram
 
-	// Save as Complex field data
-	Hologram->saveAsOhc("result/LightField/LF_complexField.ohc");				// Save the hologram complex field data
+	Hologram->saveAsOhc("result/LightField/LightField_Dice.ohc");				// Save the hologram complex field data
 
-	// Encode
-	Hologram->encoding(Hologram->ENCODE_SIMPLENI);								// Encode the hologram
+	
+	Hologram->encoding(ophLF::ENCODE_PHASE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
 
-	// Save as Encoded Image
-	Hologram->normalizeEncoded();												// Normalize the encoded hologram to generate image file
-	ivec2 encode_size = Hologram->getEncodeSize();								// Get encoded hologram size
-	Hologram->save("result/LightField/Light_Field_NI_carrier.bmp",
-		8, nullptr, encode_size[_X], encode_size[_Y]);							// Save the encoded hologram image
-
+	sprintf(g_szResult, "result/LightField/Result_LightField_Dice_%dch.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+	
 	Hologram->release();														// Release memory used to Generate Light Field
-}
+
 #endif
 #if TRI_MESH & true
-{
+	cout << "OpenHolo Library : Generation Hologram - Mesh Example" << endl;
+
 	ophTri* Hologram = new ophTri();
 
-	// Load
-	Hologram->readMeshConfig("config/TestSpecMesh.xml");						// Read the Mesh hologram configuration file
-	Hologram->loadMeshData("source/TriMesh/mesh_teapot.ply", "ply");			// Read the Meshed object data
-	Hologram->objScaleShift();													// Object scaling and shifting
+	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-	// Generate
-	Hologram->generateMeshHologram(Hologram->SHADING_FLAT);						// Generate the hologram
-		/// Put the shading effect type
+#if USE_RGB & true
+	Hologram->readConfig("config/TriMesh_3ch.xml");								// Read the LF hologram configuration file
+	Hologram->loadMeshData("source/TriMesh/TriMesh_Dice_RGB.ply", "ply");		// Read the Meshed object data
+#else
+	Hologram->readConfig("config/TriMesh_1ch.xml");
+	Hologram->loadMeshData("source/TriMesh/TriMesh_Dice_Grayscale.ply", "ply");	
+#endif
+	int nChannel = Hologram->getContext().waveNum;
 
-	// Save as Complex Field Data
-	Hologram->saveAsOhc("result/TriMesh/Mesh_complexField.ohc");				// Save the hologram complex field data
+	Hologram->generateHologram(Hologram->SHADING_FLAT);							// Generate the hologram
+	
+	Hologram->saveAsOhc("result/TriMesh/TriMesh_Dice.ohc");						// Save the hologram complex field data
 
-	// Encode
-	Hologram->encoding(Hologram->ENCODE_SIMPLENI);								// Encode the hologram
 
-	// Save as Encoded Image
-	Hologram->normalizeEncoded();												// Normalize the encoded hologram to generate image file
+	Hologram->encoding(Hologram->ENCODE_PHASE);									// Encode the hologram
+
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
 	ivec2 encode_size = Hologram->getEncodeSize();								// Get encoded hologram size
-	Hologram->save("result/TriMesh/Mesh_0.1m_ni_-0.3deg.bmp",
-		8, nullptr, encode_size[_X], encode_size[_Y]);							// Save the encoded hologram image
 
+	sprintf(g_szResult, "result/TriMesh/Result_TriMesh_Dice_%dch.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save the encoded hologram image
+		
 	Hologram->release();														// Release memory used to Generate Triangle Mesh
-}
+
 #endif
 #if WRP & true
-{
 	cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
+	
+	ophWRP* Hologram = new ophWRP();										    // ophWRP instance
+	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
 
-	ophWRP* Hologram = new ophWRP();                                   // ophWRP instance
+#if USE_RGB & true
+	Hologram->readConfig("config/WRP_3ch.xml");									// Read Config Parameters for Point Cloud CGH based WRP algorithm
+	Hologram->loadPointCloud("source/WRP/WRP_Dice_RGB.ply");
+#else
+	Hologram->readConfig("config/WRP_1ch.xml");
+	Hologram->loadPointCloud("source/WRP/WRP_Dice_Grayscale.ply");
+#endif
+	int nChannel = Hologram->getContext().waveNum;
+	
+	Hologram->generateHologram();												// CGH from WRP
+	Hologram->encoding(ophGen::ENCODE_PHASE);									// Encode Complex Field to Real Field
+	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+	sprintf(g_szResult, "result/WRP/Result_WRP_Dice_%dch.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp
 
-	Hologram->setMode(Mode_GPU);
+	Hologram->release();														// Release memory used to Generate Point Cloud 
 
-	Hologram->readConfig("config/TestSpecWRP.xml");                    // Read Config Parameters for Point Cloud CGH based WRP algorithm
-	Hologram->loadPointCloud("source/WRP/WRP_K.ply");                  // Load Point Cloud Data(*.PLY)
-	Hologram->autoScaling(); 
-	Hologram->calculateWRP();                                          // WRP generation 
-	Hologram->generateHologram();                                      // CGH from WRP
-	Hologram->waveCarry(0, 0.1, 0.15);                                 // ophGen::waveCarry  
-	Hologram->encoding(ophGen::ENCODE_PHASE);                          // Encode Complex Field to Real Field
-	Hologram->normalize();                                             // Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
-	Hologram->save("result/WRP/Result_GPU.bmp");                      // Save to bmp
-
-	Hologram->release();                                               // Release memory used to Generate Point Cloud 
-}
 #endif
 #if ENCODE & true
 {
 	ophPointCloud* Hologram = new ophPointCloud();
 
-	Hologram->loadComplex("source/Encoding/teapot_real_1920,1080.txt", "source/Encoding/teapot_imag_1920,1080.txt", 1920, 1080);
+	Hologram->loadAsOhc("result/PointCloud/Result_PointCloud_Dice.ohc");
 
 	Hologram->encoding(ophGen::ENCODE_AMPLITUDE);
 
-	Hologram->normalizeEncoded();
+	Hologram->normalize();
 
-	ivec2 encode_size = Hologram->getEncodeSize();
+	Hologram->setMergeImage(true); // R, G, B merge one image
+	int nChannel = Hologram->getContext().waveNum;
 
-	Hologram->save("result/Encoding/Encoding.bmp", 8, nullptr, encode_size[_X], encode_size[_Y]);
+	Hologram->save("result/Encoding/Encoding.bmp", nChannel * 8);
 
 	Hologram->release();
 }
