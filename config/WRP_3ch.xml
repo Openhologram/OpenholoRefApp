@@ -1,0 +1,29 @@
+<WRP>  
+  <!-- About points -->
+  <FieldLength>1000e-3</FieldLength> <!-- Double Type -->
+  <ScaleX>0.0015</ScaleX> <!-- Double Type -->
+  <ScaleY>0.0015</ScaleY> <!-- Double Type -->
+  <ScaleZ>0.0003</ScaleZ> <!-- Double Type -->
+
+  <Distance>1</Distance> <!-- Double Type -->
+  <LocationOfWRP>0.003</LocationOfWRP>  
+  <NumOfWRP>1</NumOfWRP>
+  
+  <!-- H/W -->
+  <IMG_Rotation>1</IMG_Rotation> <!-- Default 0 -->
+  <IMG_Merge>1</IMG_Merge> <!-- Valid only if WaveNum is greater than 1 -->
+  
+  <DoublePrecision>1</DoublePrecision> <!-- Default 1 -->
+  
+  <SLM_PixelNumX>3840</SLM_PixelNumX>
+  <SLM_PixelNumY>2160</SLM_PixelNumY>
+  <SLM_PixelPitchX>3.6e-6</SLM_PixelPitchX> 
+  <SLM_PixelPitchY>3.6e-6</SLM_PixelPitchY>
+  <SLM_WaveNum>3</SLM_WaveNum>    
+  <SLM_WaveLength_1>638e-9</SLM_WaveLength_1>
+  <SLM_WaveLength_2>520e-9</SLM_WaveLength_2>
+  <SLM_WaveLength_3>450e-9</SLM_WaveLength_3> <!-- Double Type -->  
+  
+  <!-- GPU -->
+  <NumOfStream>0</NumOfStream>
+</WRP>
