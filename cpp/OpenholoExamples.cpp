@@ -12,7 +12,7 @@
 #include <ophSigCH.h>
 
 
-#define POINT_CLOUD	    false			// Point Cloud
+#define POINT_CLOUD	    true			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
@@ -20,7 +20,7 @@
 
 #define ENCODE			false			// Encode
 
-#define WAVE_ABERR		true			// Wave Aberration
+#define WAVE_ABERR		false			// Wave Aberration
 #define CAS_PROPA		false			// Cascaded Propagation
 
 #define OFF_AXIS		false			// Convert Off-axis
@@ -68,9 +68,29 @@ int main()
 #endif
 
 	int nChannel = Hologram->getContext().waveNum;
+	int pnX = Hologram->getContext().pixel_number[_X];
+	int pnY = Hologram->getContext().pixel_number[_Y];
+	//Complex<Real> *dst = new Complex<Real>[pnX * pnY];
+	//memset(dst, 0, pnX*pnY);
 
+#if 0
+	Hologram->readImage("source/DepthMap/DepthMap_Dice_RGB.bmp", true);
+	int w = Hologram->m_width;
+	int h = Hologram->m_height;
+	uchar *color = new uchar[w * h];
+	memset(color, 0, w * h);
+	for (int i = 0; i < nChannel; i++) {
+		Real wave = Hologram->getContext().wave_length[i];
+		Hologram->separateColor(i, w, h, Hologram->imgRGB, color);
+
+		Hologram->RS_Propagation(color, Hologram->getComplexField()[i], wave, 2.0);
+	}
+	Hologram->Shift(0.0, -0.25);
+	//Hologram->RS_Propagation(vec3(0.0005, 0.0003, 0.0), dst, wave, 1.0, 0.5);
+#else
 	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
-	Hologram->saveAsOhc("result/PointCloud/Result_PointCloud_Dice.ohc");		// Save to ohc
+#endif
+																				//Hologram->saveAsOhc("result/PointCloud/Result_PointCloud_Dice.ohc");		// Save to ohc
 	Hologram->encoding(ophGen::ENCODE_PHASE);									// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
@@ -86,7 +106,7 @@ int main()
 
 	ophDepthMap* Hologram = new ophDepthMap();
 
-	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
+	Hologram->setMode(MODE_CPU);												// Select CPU or GPU Processing
 #if USE_RGB & true
 	Hologram->readConfig("config/DepthMap_3ch.xml");							// Read Config Parameters for Depth Map CGH
 #else
