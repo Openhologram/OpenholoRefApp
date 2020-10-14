@@ -15,7 +15,7 @@ public:
 	//Real getDistance() { return m_distance; };
 	void setConfig(OphIFTAConfig config) { m_config = config; }
 	OphIFTAConfig& getConfig() { return m_config; }
-	uint* getProgress() { return &m_nProgress; }
+	uint* getPercent() { return &n_percent; }
 
 private:
 	vec2 ss;
@@ -29,7 +29,7 @@ private:
 	Real farDepth;
 	int nIteration;
 	int nDepth;
-	uint m_nProgress;
+	uint n_percent;
 
 	int width;
 	int height;
