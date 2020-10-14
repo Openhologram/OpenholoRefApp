@@ -75,12 +75,8 @@ typedef struct {
 typedef struct {
 	fileheader fileheader;
 	bitmapinfoheader bitmapinfoheader;
-} bitmap;
-typedef struct {
-	fileheader fileheader;
-	bitmapinfoheader bitmapinfoheader;
 	rgbquad rgbquad[256];
-} bitmap8bit;
+} bitmap;
 #pragma pack(pop)
 
 #endif // !__struct_h

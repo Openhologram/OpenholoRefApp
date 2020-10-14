@@ -163,7 +163,6 @@ namespace oph
 		void addComplexFieldData(const OphComplexField &data);
 		void addComplexFieldData(const Complex<Real> *data);
 		void addWavelength(const Real wavlen);
-		void clearWavelength();
 		//void addLinkFilePath(const std::string &path);
 
 		bool save();

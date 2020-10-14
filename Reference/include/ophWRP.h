@@ -80,7 +80,7 @@ using namespace oph;
 /**
 * @addtogroup wrp
 //@{
-* @details
+* @detail
 
 * @section Introduction
 
@@ -136,56 +136,46 @@ protected:
 	virtual ~ophWRP(void);
 
 public:
-	const vec3& getScale() { return wrp_config_.scale; }
-	const Real& getLocation() { return wrp_config_.wrp_location; }
-	const Real& getDistance() { return wrp_config_.propagation_distance; }
-	const int& getNumOfWRP() { return wrp_config_.num_wrp; }
-	const Real& getFieldLens() { return wrp_config_.fieldLength; }
-	void setScale(vec3 scale) { wrp_config_.scale = scale; }
-	void setLocation(Real location) { wrp_config_.wrp_location = location; }
-	void setDistance(Real distance) { wrp_config_.propagation_distance; }
+	const vec3& getScale() { return pc_config_.scale; }
+	const Real& getLocation() { return pc_config_.wrp_location; }
+	const Real& getDistance() { return pc_config_.propagation_distance; }
+	const int& getNumOfWRP() { return pc_config_.num_wrp; }
+	void setScale(vec3 scale) { pc_config_.scale = scale; }
+	void setLocation(Real location) { pc_config_.wrp_location = location; }
+	void setDistance(Real distance) { pc_config_.propagation_distance; }
 	void autoScaling();
-	int getNumOfPoints() { return n_points; }
 
 	/**
-	* @brief load to point cloud data.
-	* @param[in] pc_file Point cloud data file name
-	* @return Type: <B>int</B>\n
-	*				If the function succeeds, the return value is <B>Positive integer</B>.\n
-	*				If the function fails, the return value is <B>Negative interger</B>.
+	* @brief override
+	* @{
+	* @brief Import Point Cloud Data Base File : *.PLY file.
+	* This Function is included memory location of Input Point Clouds.
+	*/
+	/**
+	* @brief override
+	* @param InputModelFile PointCloud(*.PLY) input file path
+	* @return number of Pointcloud (if it failed loading, it returned -1)
 	*/
 	virtual int loadPointCloud(const char* pc_file);
-	
 	/**
-	* @brief load to configuration file.
-	* @param[in] fname config file name
-	* @return Type: <B>bool</B>\n
-	*				If the function succeeds, the return value is <B>true</B>.\n
-	*				If the function fails, the return value is <B>false</B>.
+	* @brief
+	* @{
+	* @brief Import Specification Config File(*.config) file
 	*/
-	virtual bool readConfig(const char* fname);
-
 	/**
-	* @brief Set the value of a variable is_CPU(true or false)
-	* @details <pre>
-	if is_CPU == true
-	CPU implementation
-	else
-	GPU implementation </pre>
-	* @param[in] is_CPU the value for specifying whether the hologram generation method is implemented on the CPU or GPU
+	* @param InputConfigFile Specification Config(*.config) file path
 	*/
-	void setMode(bool is_CPU);
+	virtual bool readConfig(const char* cfg_file);
 
+
+	virtual void normalize(void);
+
+//	void encodeHologram(void);
 	/**
-	* @brief Function for setting precision
-	* @param[in] precision level.
+	* @brief Generate a WRP, main funtion.
+	* @return implement time (sec)
 	*/
-	void setPrecision(bool bPrecision) { bSinglePrecision = bPrecision; }
-	bool getPrecision() { return bSinglePrecision; }
-
-
-	double calculateWRPCPU(void);
-	double calculateWRPGPU(void);
+	double calculateWRP(void);
 
 //	virtual void fresnelPropagation(Complex<Real>* in, Complex<Real>* out, Real distance);
 
@@ -198,24 +188,10 @@ public:
 	* @brief Generate multiple wavefront recording planes, main funtion.
 	* @return multiple WRP (sec)
 	*/
-	Complex<Real>** calculateMWRP(void);
+	oph::Complex<Real>** calculateMWRP(void);
 
-	inline Complex<Real>* getWRPBuff(void) { return p_wrp_; };
+	inline oph::Complex<Real>* getWRPBuff(void) { return p_wrp_; };
 
-	/**
-	* @brief Set the value of a variable is_ViewingWindow(true or false)
-	* @details <pre>
-	if is_ViewingWindow == true
-	Transform viewing window
-	else
-	Hologram </pre>
-	* @param is_ViewingWindow : the value for specifying whether the hologram generation method is implemented on the viewing window
-	*/
-	void setViewingWindow(bool is_ViewingWindow);
-	
-protected:
-	// ==== GPU Methods ===============================================
-	void prepareInputdataGPU();
 
 private:
 
@@ -225,27 +201,16 @@ private:
 	void addPixel2WRP(int x, int y, oph::Complex<Real> temp, oph::Complex<Real>* wrp);
 
 	virtual void ophFree(void);
-	inline Real transVW(Real pt) {
-		Real fieldLens = this->getFieldLens();
-		return -fieldLens * pt / (pt - fieldLens);
-	}
 
-	void transVW(Real* dst, Real *src, int size);
 protected:
 
 	int n_points;                 ///< numbers of points
 
-	Complex<Real>* p_wrp_;   ///< wrp buffer - complex type
+	oph::Complex<Real>* p_wrp_;   ///< wrp buffer - complex type
 
 	OphPointCloudData obj_;       ///< Input Pointcloud Data
-	Real *scaledVertex;
-	OphWRPConfig wrp_config_;      ///< structure variable for WRP hologram configuration
 
-private:
-	bool is_ViewingWindow;
-	bool is_CPU;
-	bool bSinglePrecision;
-	Real zmax_;
+	OphWRPConfig pc_config_;      ///< structure variable for WRP hologram configuration
 
 };
 #endif

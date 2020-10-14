@@ -16,7 +16,7 @@
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
-#define WRP				false			// WRP
+#define WRP				true			// WRP
 
 #define ENCODE			false			// Encode
 
@@ -276,8 +276,6 @@ int main()
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
 
-	holo->setMode(MODE_GPU);
-
 	//read parameter
 	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
@@ -290,10 +288,8 @@ int main()
 		return false;
 	}
 
-	double anglex = 1.0, angley = 1.0;
-
 	//run Convert Offaxis function
-	holo->sigConvertOffaxis(anglex, angley);
+	holo->sigConvertOffaxis();
 
 	//save hologram data for ohc file 
 	holo->saveAsOhc("result/OffAxis/Off_axis.ohc");
@@ -309,8 +305,6 @@ int main()
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
 
-	holo->setMode(MODE_GPU);
-
 	double red = 0.000000633;
 	double green = 0.000000532;
 	double blue = 0.000000473;
@@ -324,6 +318,7 @@ int main()
 
 	//hologram data load
 	if (holo->loadAsOhc("source/CAC/ColorPoint.ohc") < 1) {
+	//if (!holo->load("source/ColorPoint_re.bmp", "source/ColorPoint_im.bmp")) {
 		// no file 
 		return false;
 	}
@@ -346,8 +341,6 @@ int main()
 	//declaration ophSig class
 	ophSig *holo = new ophSig();
 
-	holo->setMode(MODE_GPU);
-
 	//read parameter
 	if (!holo->readConfig("config/TestSpecHoloParam.xml")) {
 		// no file 
@@ -360,11 +353,8 @@ int main()
 		return false;
 	}
 
-	double depth = -0.1;
-	double redrate = 0.022;
-
 	//run convert horizontal parallax only hologram
-	holo->sigConvertHPO(depth, redrate);
+	holo->sigConvertHPO();
 
 	//save hologram data for ohc file
 	holo->saveAsOhc("result/HPO/HPO.ohc");
@@ -379,8 +369,6 @@ int main()
 	std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
 	ophSig* holo = new ophSig();
-
-	holo->setMode(MODE_GPU);
 
 	float depth = 0;
 
@@ -412,12 +400,10 @@ int main()
 #endif
 #if GET_SF & true
 {
-	std::cout << "OpenHolo Library : Hologram core processing - get parameter using shrpness function maximization Example" << std::endl;
+	std::cout << "OpenHolo Library : Hologram core processing - get parameter using axis transformation Example" << std::endl;
 
 	////declaration ophSig class
 	ophSig* holo = new ophSig();
-
-	holo->setMode(MODE_GPU);
 
 	float depth = 0;
 
@@ -438,7 +424,7 @@ int main()
 	std::cout << depth << endl;
 
 	// backpropagation
-	holo->propagationHolo(depth);
+	holo->propagationHolo(-depth);
 
 	//save hologram data for ohc file
 	holo->saveAsOhc("result/SF/SF.ohc");

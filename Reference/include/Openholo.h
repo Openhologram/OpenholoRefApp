@@ -66,7 +66,7 @@ struct OPH_DLL OphConfig
 	vec3			shift;						// shift
 	Real			k;							//< 2 * PI / lambda(wavelength)
 	vec2			ss;							//< pn * pp
-	uint			waveNum;					// wave num
+
 	Real*			wave_length;				//< wave length
 	bool			bRotation;
 	bool			bMergeImg;					

@@ -5,7 +5,7 @@
   <height>0.01</height>
   <wavelength>0.000000532</wavelength>
   <wavelength_num>1</wavelength_num>
-  <NA>-0.05</NA>
+  <NA>0.5</NA>
   <z>-0.1</z>
   <angle_x>0</angle_x>
   <angle_y>5</angle_y>
