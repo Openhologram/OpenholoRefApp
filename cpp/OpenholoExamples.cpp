@@ -3,6 +3,8 @@
 #include <ophLightField.h>
 #include <ophTriMesh.h>
 #include <ophWRP.h>
+#include <ophNonHogelLF.h>
+
 
 #include <ophWaveAberration.h>
 #include <ophCascadedPropagation.h>
@@ -12,11 +14,12 @@
 #include <ophSigCH.h>
 
 
-#define POINT_CLOUD	    true			// Point Cloud
+#define POINT_CLOUD	    false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
-#define TRI_MESH		false			// Triangle Mesh
-#define WRP				true			// WRP
+#define TRI_MESH		true			// Triangle Mesh
+#define WRP				false			// WRP
+#define NonHogel_LF		false			// non-hogel based LF cgh
 
 #define ENCODE			false			// Encode
 
@@ -31,9 +34,10 @@
 #define SIG_PSDH		false			// Signal Phase Shift
 #define SIG_PU			false			// Signal Phase Unwrapping
 #define SIG_CH			false			// Signal Compressive Holography
+#define PSDH_3ArbStep	false			// complex field reconstruction from 3 intereference patterns with arbitrary phase shifts	
 
 
-#define USE_RGB			true			// on/off
+#define USE_RGB			false			// on/off
 
 char g_szResult[MAX_PATH] = { 0, };
 
@@ -166,28 +170,28 @@ int main()
 
 	ophTri* Hologram = new ophTri();
 
-	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
+	Hologram->setMode(MODE_CPU);												// Select CPU or GPU Processing
 
 #if USE_RGB & true
 	Hologram->readConfig("config/TriMesh_3ch.xml");								// Read the LF hologram configuration file
 	Hologram->loadMeshData("source/TriMesh/TriMesh_Dice_RGB.ply", "ply");		// Read the Meshed object data
 #else
 	Hologram->readConfig("config/TriMesh_1ch.xml");
-	Hologram->loadMeshData("source/TriMesh/TriMesh_Dice_Grayscale.ply", "ply");	
+	Hologram->loadMeshData("source/TriMesh/mesh_test.ply", "ply");	
 #endif
 	int nChannel = Hologram->getContext().waveNum;
 
 	Hologram->generateHologram(Hologram->SHADING_FLAT);							// Generate the hologram
 	
-	Hologram->saveAsOhc("result/TriMesh/TriMesh_Dice.ohc");						// Save the hologram complex field data
+	Hologram->saveAsOhc("result/TriMesh/mesh_test.ohc");						// Save the hologram complex field data
 
 
-	Hologram->encoding(Hologram->ENCODE_PHASE);									// Encode the hologram
+	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);									// Encode the hologram
 
 	Hologram->normalize();														// Normalize the encoded hologram to generate image file
 	ivec2 encode_size = Hologram->getEncodeSize();								// Get encoded hologram size
 
-	sprintf(g_szResult, "result/TriMesh/Result_TriMesh_Dice_%dch.bmp", nChannel);
+	sprintf(g_szResult, "result/TriMesh/mesh_test_%dch.bmp", nChannel);
 	Hologram->save(g_szResult, nChannel * 8);									// Save the encoded hologram image
 		
 	Hologram->release();														// Release memory used to Generate Triangle Mesh
@@ -492,6 +496,94 @@ int main()
 
 	// Save results (numerical reconstructions) to image files
 	holo->saveNumRec("result/CompressiveHolo/CH_Test.bmp");
+	holo->release();
+}
+#endif
+
+#if NonHogel_LF & true
+{
+	std::cout << "OpenHolo Library : Generation hologram - Non-hogel based CGH from light field Example" << std::endl;
+
+	ophNonHogelLF *Hologram = new ophNonHogelLF;
+	Hologram->readConfig("config/NonHogel_LF_1ch.xml");							// Read the LF hologram configuration file
+	int nChannel = Hologram->getContext().waveNum;
+
+	Hologram->loadLF("source/NonHogel_LF", "bmp");								// Load the Light field source image files
+	Hologram->preprocessLF();													// preprocess Light Field (time-consuming)
+
+	// generate hologram with random phase
+	Hologram->generateHologram();												// Generate the hologram
+
+	// save hologram
+	Hologram->encoding(ophLF::ENCODE_PHASE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_phase.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	Hologram->encoding(ophLF::ENCODE_AMPLITUDE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_amplitude.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	// generate hologram with specific plane wave
+	double thetaX = M_PI / 180. * 1.0;											// plane wave angle
+	double thetaY = M_PI / 180. * 0.0;
+	Hologram->generateHologram(thetaX, thetaY);
+
+	// save hologram
+	Hologram->encoding(ophLF::ENCODE_PHASE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_plane_phase.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	Hologram->encoding(ophLF::ENCODE_AMPLITUDE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_plane_amplitude.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	// generate hologram with specific plane wave 2															
+	thetaX = M_PI / 180. * 1.0;											// plane wave angle
+	thetaY = M_PI / 180. * 1.0;
+	Hologram->generateHologram(thetaX, thetaY);
+
+	// save hologram
+	Hologram->encoding(ophLF::ENCODE_PHASE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_plane2_phase.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	Hologram->encoding(ophLF::ENCODE_AMPLITUDE);									// Encode the hologram
+	Hologram->normalize();														// Normalize the encoded hologram to generate image file
+
+	sprintf(g_szResult, "result/NonHogel_LF/Result_NonHogel_LF_%dch_plane2_amplitude.bmp", nChannel);
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...						// Save the encoded hologram image
+
+	//
+	Hologram->release();
+}
+#endif
+
+#if PSDH_3ArbStep & true
+{
+	std::cout << "OpenHolo Library : Hologram core processing - Complex Field from phase shift digital hologram with 3 arbitrary unknwon  phase shift Example" << std::endl;
+
+	ophSig *holo = new ophSig();
+
+	const char *f0 = "source/PSDH_3ArbStep/0_gray.bmp";		// File names of interference patterns with unknown phase shifts
+	const char *f1 = "source/PSDH_3ArbStep/1_gray.bmp";
+	const char *f2 = "source/PSDH_3ArbStep/2_gray.bmp";
+	const char *fOI = "source/PSDH_3ArbStep/object_intensity_gray.bmp";		// object wave intensity
+	const char *fRI = "source/PSDH_3ArbStep/ref_intensity_gray.bmp";		// reference wave intensity
+
+	int nIter = 10;
+	holo->getComplexHFrom3ArbStepPSDH(f0, f1, f2, fOI, fRI, nIter);							// Extract complex field 
+
+	holo->save("result/PSDH_3ArbStep/re_C.bmp", "result/PSDH_3ArbStep/im_C.bmp"); // Save complex field to image files (real and imaginary parts)
 	holo->release();
 }
 #endif

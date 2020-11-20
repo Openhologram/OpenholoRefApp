@@ -68,7 +68,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>openholo_d.lib;ophgen_d.lib;ophrec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>openholo.lib;ophgen.lib;ophrec.lib;ophsig.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(CUDA_PATH)\Win32;$(SolutionDir)Reference\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>

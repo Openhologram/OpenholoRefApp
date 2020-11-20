@@ -1,0 +1,28 @@
+﻿<LightField>
+  <!-- About points -->
+  <FieldLength>1000e-3</FieldLength> <!-- Double Type -->
+  <Distance>0.0</Distance> <!-- Double Type -->
+  
+  <Image_NumOfX>40</Image_NumOfX>
+  <Image_NumOfY>40</Image_NumOfY>
+  <Image_Width>300</Image_Width>
+  <Image_Height>200</Image_Height>
+  
+  <!-- H/W -->
+  <IMG_Rotation>1</IMG_Rotation> <!-- Default 0 -->
+  <IMG_Merge>1</IMG_Merge> <!-- Valid only if WaveNum is greater than 1 -->
+  
+  <DoublePrecision>1</DoublePrecision> <!-- Default 1 -->
+  
+  <SLM_PixelNumX>300</SLM_PixelNumX>
+  <SLM_PixelNumY>200</SLM_PixelNumY>
+  <SLM_PixelPitchX>6.0e-6</SLM_PixelPitchX> 
+  <SLM_PixelPitchY>6.0e-6</SLM_PixelPitchY>
+  <SLM_WaveNum>1</SLM_WaveNum>    
+  <SLM_WaveLength_1>638e-9</SLM_WaveLength_1>
+  <SLM_WaveLength_2>520e-9</SLM_WaveLength_2>
+  <SLM_WaveLength_3>450e-9</SLM_WaveLength_3> <!-- Double Type -->  
+  
+  <!-- GPU -->
+  <NumOfStream>0</NumOfStream>
+ </LightField>
