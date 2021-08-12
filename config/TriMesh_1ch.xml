@@ -14,7 +14,7 @@
   
   <!-- H/W -->
   <IMG_Rotation>0</IMG_Rotation> <!-- Default 0 -->
-  <IMG_Merge>0</IMG_Merge> <!-- Valid only if WaveNum is greater than 1 -->
+  <IMG_Merge>0</IMG_Merge>
   
   <DoublePrecision>1</DoublePrecision> <!-- Default 1 -->
   

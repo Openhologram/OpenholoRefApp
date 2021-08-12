@@ -1,0 +1,15 @@
+<testCH_Param>  
+  <rows>1920</rows>
+  <cols>1080</cols>
+  <width>0.01</width>
+  <height>0.01</height>
+  <wavelength>638e-9</wavelength>
+  <nz>10</nz>
+  <zmin>0.054</zmin>
+  <dz>0.0008</dz>
+  <maxiter>1</maxiter>
+  <tau>0.05</tau>
+  <tolA>1e-6</tolA>
+  <tv_iters>5</tv_iters> 
+  
+</testCH_Param>

@@ -7,7 +7,7 @@
   <nz>10</nz>
   <zmin>0.054</zmin>
   <dz>0.0008</dz>
-  <maxiter>50</maxiter>
+  <maxiter>1</maxiter>
   <tau>0.05</tau>
   <tolA>1e-6</tolA>
   <tv_iters>5</tv_iters> 

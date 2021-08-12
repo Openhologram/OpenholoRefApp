@@ -12,12 +12,12 @@
 #include <ophSig.h>
 #include <ophSigPU.h>
 #include <ophSigCH.h>
+#include <ImgControl.h>
 
-
-#define POINT_CLOUD	    false			// Point Cloud
+#define POINT_CLOUD	    true			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
-#define TRI_MESH		true			// Triangle Mesh
+#define TRI_MESH		false			// Triangle Mesh
 #define WRP				false			// WRP
 #define NonHogel_LF		false			// non-hogel based LF cgh
 
@@ -95,10 +95,19 @@ int main()
 	Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);						// CGH by R-S Diffract
 #endif
 																				//Hologram->saveAsOhc("result/PointCloud/Result_PointCloud_Dice.ohc");		// Save to ohc
-	Hologram->encoding(ophGen::ENCODE_PHASE);									// Encode Complex Field to Real Field
+
+	Hologram->encoding(ophGen::ENCODE_IMAGINEARY);									// Encode Complex Field to Real Field
 	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
 
-	sprintf(g_szResult, "result/PointCloud/Result_PointCloud_Dice_%dch.bmp", nChannel);
+	sprintf(g_szResult, "result/PointCloud/Result_PointCloud_Dice_%dch(imag).bmp", nChannel);
+
+	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
+
+	Hologram->encoding(ophGen::ENCODE_REAL);									// Encode Complex Field to Real Field
+	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+
+	sprintf(g_szResult, "result/PointCloud/Result_PointCloud_Dice_%dch(real).bmp", nChannel);
+
 	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
 
 	Hologram->release();														// Release memory used to Generate Point Cloud
@@ -114,19 +123,21 @@ int main()
 #if USE_RGB & true
 	Hologram->readConfig("config/DepthMap_3ch.xml");							// Read Config Parameters for Depth Map CGH
 #else
-	Hologram->readConfig("config/DepthMap_1ch.xml");
+	Hologram->readConfig("config/Dice_DepthMap 2K.xml");
 #endif
 
 	Hologram->readImageDepth("source/DepthMap", 
-		"DepthMap_Dice_RGB", "DepthMap_Dice_Depth");							// Read depth image & rgb image
+		"DepthMap_256_rgb", "DepthMap_256_256bit");							// Read depth image & rgb image
 
 	int nChannel = Hologram->getContext().waveNum;
 
 	Hologram->generateHologram();												// CGH by depth map
-	Hologram->saveAsOhc("result/DepthMap/DepthMap_Dice.ohc");				// Save the hologram complex field data
+	//Hologram->saveAsOhc("result/DepthMap/DepthMap_Dice.ohc");				// Save the hologram complex field data
 
-	Hologram->encoding(ophDepthMap::ENCODE_PHASE);								// Encode Complex Field to Real Field
-	Hologram->normalize();														// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+	Hologram->encoding(ophDepthMap::ENCODE_SYMMETRIZATION);								// Encode Complex Field to Real Field
+		
+	Hologram->normalize(true);													// Normalize Real Field to unsigned char(0~255) for save to image(*.BMP)
+	
 
 	sprintf(g_szResult, "result/DepthMap/Result_DepthMap_Dice_%dch.bmp", nChannel);
 	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
@@ -177,23 +188,25 @@ int main()
 	Hologram->loadMeshData("source/TriMesh/TriMesh_Dice_RGB.ply", "ply");		// Read the Meshed object data
 #else
 	Hologram->readConfig("config/TriMesh_1ch.xml");
-	Hologram->loadMeshData("source/TriMesh/mesh_test.ply", "ply");	
+	Hologram->loadMeshData("source/TriMesh/mesh_rabbit.ply", "ply");
+	Hologram->loadTexturePattern("source/TriMesh/A.bmp", "bmp");
 #endif
 	int nChannel = Hologram->getContext().waveNum;
-
+	//Hologram->loadTexturePattern("source/TriMesh/A.bmp", "bmp", 0.5);
 	Hologram->generateHologram(Hologram->SHADING_FLAT);							// Generate the hologram
 	
-	Hologram->saveAsOhc("result/TriMesh/mesh_test.ohc");						// Save the hologram complex field data
+	//Hologram->saveAsOhc("result/TriMesh/mesh_test.ohc");						// Save the hologram complex field data
 
 
-	Hologram->encoding(Hologram->ENCODE_AMPLITUDE);									// Encode the hologram
+	//Hologram->encoding(Hologram->ENCODE_AMPLITUDE);									// Encode the hologram
+	Hologram->encoding(Hologram->ENCODE_PHASE);									// Encode the hologram
 
 	Hologram->normalize();														// Normalize the encoded hologram to generate image file
 	ivec2 encode_size = Hologram->getEncodeSize();								// Get encoded hologram size
 
-	sprintf(g_szResult, "result/TriMesh/mesh_test_%dch.bmp", nChannel);
+	sprintf(g_szResult, "result/TriMesh/mesh_rabbit_%dch.bmp", nChannel);
 	Hologram->save(g_szResult, nChannel * 8);									// Save the encoded hologram image
-		
+	//Hologram->reconTest("result/TriMesh/mesh_Recon_rabbit.bmp");
 	Hologram->release();														// Release memory used to Generate Triangle Mesh
 
 #endif
@@ -483,11 +496,13 @@ int main()
 	ophSigCH *holo = new ophSigCH;
 
 	// Load configure file (xml)
-	if (!holo->readConfig("config/TestSpecCH.xml")) {
+	//if (!holo->readConfig("config/TestSpecCH.xml")) {
+	if (!holo->readConfig("config/TestSpecCH(FHD).xml")) {
 		return false;
 	}
 
-	if (!holo->loadCHtemp("source/CompressiveHolo/sampleComplexH_re.bmp", "source/CompressiveHolo/sampleComplexH_im.bmp", 8)) {
+	//if (!holo->loadCHtemp("source/CompressiveHolo/sampleComplexH_re.bmp", "source/CompressiveHolo/sampleComplexH_im.bmp", 8)) {
+	if (!holo->loadCHtemp("source/CompressiveHolo/Result_PointCloud_Dice_1ch(real).bmp", "source/CompressiveHolo/Result_PointCloud_Dice_1ch(imag).bmp", 8)) {
 		return false;
 	}
 
@@ -495,7 +510,8 @@ int main()
 	holo->runCH(0);
 
 	// Save results (numerical reconstructions) to image files
-	holo->saveNumRec("result/CompressiveHolo/CH_Test.bmp");
+	//holo->saveNumRec("result/CompressiveHolo/CH_Test.bmp");
+	holo->saveNumRec("result/CompressiveHolo/CH_Test(from PC).bmp");
 	holo->release();
 }
 #endif
