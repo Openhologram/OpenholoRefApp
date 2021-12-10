@@ -14,7 +14,7 @@
 #include <ophSigCH.h>
 #include <ImgControl.h>
 
-#define POINT_CLOUD	    true			// Point Cloud
+#define POINT_CLOUD	    false			// Point Cloud
 #define DEPTH_MAP		false			// Depth Map
 #define LIGHT_FIELD		false			// Light Field
 #define TRI_MESH		false			// Triangle Mesh
@@ -61,8 +61,22 @@ int main()
 	cout << "OpenHolo Library : Generation Hologram - Point Cloud Example" << endl;
 
 	ophPointCloud* Hologram = new ophPointCloud();
-	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
+	Hologram->SetMode(MODE_CPU);												// Select CPU or GPU Processing
 
+#if 1
+	Hologram->readConfig("config/PointCloud_1ch.xml");
+	Hologram->loadPointCloud("source/PointCloud/PointCloud_Dice_Grayscale.ply");
+	//Hologram->readConfig("config/Dice_PointCloud(test).xml");
+	//Hologram->loadPointCloud("source/PointCloud/PointCloud_20000.ply");
+	
+	for (int i = 1; i <= omp_get_max_threads(); i++)
+	{
+		Hologram->setMaxThread(i);
+		Hologram->generateHologram(ophPointCloud::PC_DIFF_RS);		
+	}
+
+
+#else
 #if USE_RGB & true
 	Hologram->readConfig("config/PointCloud_3ch.xml");							// Read Config Parameters for Point Cloud CGH
 	Hologram->loadPointCloud("source/PointCloud/PointCloud_Dice_RGB.ply");		// Load Point Cloud Data(*.PLY)
@@ -109,7 +123,7 @@ int main()
 	sprintf(g_szResult, "result/PointCloud/Result_PointCloud_Dice_%dch(real).bmp", nChannel);
 
 	Hologram->save(g_szResult, nChannel * 8);									// Save to bmp/png/jpg...
-
+#endif
 	Hologram->release();														// Release memory used to Generate Point Cloud
 
 #endif
@@ -119,7 +133,7 @@ int main()
 
 	ophDepthMap* Hologram = new ophDepthMap();
 
-	Hologram->setMode(MODE_CPU);												// Select CPU or GPU Processing
+	Hologram->SetMode(MODE_CPU);												// Select CPU or GPU Processing
 #if USE_RGB & true
 	Hologram->readConfig("config/DepthMap_3ch.xml");							// Read Config Parameters for Depth Map CGH
 #else
@@ -150,7 +164,7 @@ int main()
 
 	ophLF* Hologram = new ophLF();
 
-	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
+	Hologram->SetMode(MODE_GPU);												// Select CPU or GPU Processing
 
 #if USE_RGB & true
 	Hologram->readConfig("config/LightField_3ch.xml");							// Read the LF hologram configuration file
@@ -181,7 +195,7 @@ int main()
 
 	ophTri* Hologram = new ophTri();
 
-	Hologram->setMode(MODE_CPU);												// Select CPU or GPU Processing
+	Hologram->SetMode(MODE_CPU);												// Select CPU or GPU Processing
 
 #if USE_RGB & true
 	Hologram->readConfig("config/TriMesh_3ch.xml");								// Read the LF hologram configuration file
@@ -214,7 +228,7 @@ int main()
 	cout << "OpenHolo Library : Generation Hologram - Wavefront Recording Plane(WRP) Example" << endl;
 	
 	ophWRP* Hologram = new ophWRP();										    // ophWRP instance
-	Hologram->setMode(MODE_GPU);												// Select CPU or GPU Processing
+	Hologram->SetMode(MODE_GPU);												// Select CPU or GPU Processing
 
 #if USE_RGB & true
 	Hologram->readConfig("config/WRP_3ch.xml");									// Read Config Parameters for Point Cloud CGH based WRP algorithm
