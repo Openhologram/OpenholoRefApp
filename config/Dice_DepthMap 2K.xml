@@ -4,13 +4,13 @@
   <FarOfDepth>700e-3</FarOfDepth>
   
   <!-- H/W -->
-  <IMG_Rotation>1</IMG_Rotation> <!-- Default 0 -->
+  <IMG_Rotation>0</IMG_Rotation> <!-- Default 0 -->
   <IMG_Merge>0</IMG_Merge> <!-- Valid only if WaveNum is greater than 1 -->
   
   <DoublePrecision>1</DoublePrecision> <!-- Default 1 -->
   
-  <SLM_PixelNumX>1920</SLM_PixelNumX>
-  <SLM_PixelNumY>1080</SLM_PixelNumY>
+  <SLM_PixelNumX>1024</SLM_PixelNumX>
+  <SLM_PixelNumY>1024</SLM_PixelNumY>
   <SLM_PixelPitchX>10e-6</SLM_PixelPitchX> 
   <SLM_PixelPitchY>10e-6</SLM_PixelPitchY>
   <SLM_WaveNum>1</SLM_WaveNum>    
@@ -19,8 +19,8 @@
   <SLM_WaveLength_3>450e-9</SLM_WaveLength_3> <!-- Double Type -->  
   
   <FlagChangeDepthQuantization>1</FlagChangeDepthQuantization>
-  <DefaultDepthQuantization>256</DefaultDepthQuantization>
-  <NumberOfDepthQuantization>256</NumberOfDepthQuantization>
-  <RenderDepth>1:256</RenderDepth>
+  <DefaultDepthQuantization>1</DefaultDepthQuantization>
+  <NumberOfDepthQuantization>1</NumberOfDepthQuantization>
+  <RenderDepth>1:1</RenderDepth>
   <RandomPhase>0</RandomPhase>
 </DepthMap>
